@@ -1,2 +1,2 @@
-# have-blockly
+# haxe-blockly
 Haxe wrapper for Blockly
