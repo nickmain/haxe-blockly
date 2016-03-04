@@ -1,0 +1,13 @@
+-js build/main.js
+-cp src
+-D dce=full
+-main app.Main
+
+--next
+
+-python build/main.py
+-cp src
+-D dce=full
+-main backend.flask.Main
+
+

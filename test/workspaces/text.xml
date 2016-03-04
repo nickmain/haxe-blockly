@@ -1,0 +1,46 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <block type="app.blocks.FooBarBlock" x="150" y="70">
+    <field name="check">FALSE</field>
+    <statement name="stat1">
+      <block type="controls_if">
+        <value name="IF0">
+          <block type="app.blocks.DemoQuestions">
+            <field name="check1">FALSE</field>
+            <field name="check2">TRUE</field>
+            <field name="check3">TRUE</field>
+            <field name="check4">FALSE</field>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="controls_repeat_ext"></block>
+        </statement>
+      </block>
+    </statement>
+    <value name="inp1">
+      <shadow type="app.blocks.DemoQuestions">
+        <field name="check1">FALSE</field>
+        <field name="check2">TRUE</field>
+        <field name="check3">FALSE</field>
+        <field name="check4">FALSE</field>
+      </shadow>
+      <block type="text">
+        <field name="TEXT"></field>
+      </block>
+    </value>
+    <next>
+      <block type="app.blocks.KitchenSink">
+        <field name="check1">FALSE</field>
+        <field name="text1">hello</field>
+        <field name="text2">1.0</field>
+        <field name="text3">1</field>
+        <field name="angle1">240</field>
+        <field name="color1">#ff0000</field>
+        <field name="color2">#ffffe0</field>
+        <field name="menu1">FOO</field>
+        <field name="var1">foo</field>
+        <field name="checkX">FALSE</field>
+        <comment pinned="false" h="80" w="160">Everything but the kitchen sink.</comment>
+      </block>
+    </next>
+  </block>
+</xml>
