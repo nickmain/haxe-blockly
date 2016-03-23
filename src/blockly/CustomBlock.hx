@@ -53,6 +53,28 @@ class CustomBlock {
     }
 
     /**
+     * Called on each block when the workspace has changed.
+     */
+    public function onChange(event: Dynamic) {
+    }
+
+    /**
+     * Get the previous statement block
+     */
+    public function getPreviousBlock(): Null<Block> {
+        if(block.previousConnection == null ) return null;
+        return block.previousConnection.targetBlock();
+    }
+
+    /**
+     * Get the block receiving the output
+     */
+    public function getOutputBlock(): Null<Block> {
+        if(block.outputConnection == null ) return null;
+        return block.outputConnection.targetBlock();
+    }
+
+    /**
      * Get the CustomBlock associated with a Blockly block
      */
     public static function fromBlock(block: Block): Null<CustomBlock> {

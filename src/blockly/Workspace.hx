@@ -14,6 +14,11 @@ extern class Workspace {
     public function addChangeListener(listener: Void->Void): Void;
 
     /**
+     * Remove a change callback from the workspace
+     */
+    public function removeChangeListener(listener: Void->Void): Void;
+
+    /**
      * The workspace id
      */
     public var id: String;
@@ -82,4 +87,16 @@ extern class Workspace {
      * Obtain a newly created block.
      */
     public function newBlock(prototypeName:String): Block;
+
+    /**
+     * Fire a change event
+     */
+    public function fireChangeEvent(): Void;
+
+    /**
+     * Update the toolbox
+     */
+    @:overload(function(toolXML: js.html.Element): Void {})
+    @:overload(function(toolXML: String): Void {})
+    public function updateToolbox(toolXML: String): Void;
 }

@@ -70,6 +70,27 @@ class BlocklyApp {
     }
 
     /**
+     * Serialize the current workspace to local storage with the given key
+     * @return the XML
+     */
+    public function workspaceToLocalStorage(key:String): String {
+        var xml =  XMLSerializer.domToText(XMLSerializer.workspaceToDom(workspace));
+        Browser.window.localStorage.setItem(key, xml);
+        return xml;
+    }
+
+    /**
+     * Load the workspace from local storage with the given key.
+     * @return false if the key was not found.
+     */
+    public function loadWorkspaceFromLocalStorage(key: String): Bool {
+        var xml = Browser.window.localStorage.getItem(key);
+        if(xml == null) return false;
+        XMLSerializer.domToWorkspace(workspace, XMLSerializer.textToDom(xml));
+        return true;
+    }
+
+    /**
      * Register a block type
      */
     public function registerBlock(clazz: Class<CustomBlock>) {
@@ -97,35 +118,11 @@ class BlocklyApp {
             compose: function(containerBlock) {
                 var haxeBlock: CustomBlock = untyped __js__("this.haxeBlock");
                 haxeBlock.compose(containerBlock);
+            },
+            onchange: function(event) {
+                var haxeBlock: CustomBlock = untyped __js__("this.haxeBlock");
+                haxeBlock.onChange(event);
             }
         };
-    }
-
-    /**
-     * Add a resize handling function to keep the blockly DIV in step with the given area
-     */
-    public function addResizeHandler(areaId: String) {
-        var blocklyArea = Browser.document.getElementById(areaId);
-        var blocklyDiv  = Browser.document.getElementById(divId);
-
-        var onresize = function(e=null) {
-            // Compute the absolute coordinates and dimensions of blocklyArea.
-            var element = blocklyArea;
-            var x = 0;
-            var y = 0;
-            do {
-                x += element.offsetLeft;
-                y += element.offsetTop;
-                element = element.offsetParent;
-            } while (element != null);
-            // Position blocklyDiv over blocklyArea.
-            blocklyDiv.style.left = x + 'px';
-            blocklyDiv.style.top = y + 'px';
-            blocklyDiv.style.width = blocklyArea.offsetWidth + 'px';
-            blocklyDiv.style.height = blocklyArea.offsetHeight + 'px';
-        };
-
-        Browser.window.addEventListener('resize', onresize, false);
-        onresize();
     }
 }

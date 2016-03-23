@@ -16,9 +16,11 @@ class DemoQuestions extends CustomBlock {
 //        block.setNextStatement(true);
         block.setTooltip("Some possible choices");
 
-        appendLabelledField("You can choose this", new FieldCheckbox(false), "check1" ).setAlign( Blockly.ALIGN_RIGHT );
-        appendLabelledField("You can also choose this", new FieldCheckbox(true), "check2" ).setAlign( Blockly.ALIGN_RIGHT );
-        appendLabelledField("This is another option", new FieldCheckbox(false), "check3" ).setAlign( Blockly.ALIGN_RIGHT );
-        appendLabelledField("Or you can choose this one", new FieldCheckbox(false), "check4" ).setAlign( Blockly.ALIGN_RIGHT );
+        var changeBx = function(b: Bool) { block.workspace.fireChangeEvent(); return b; }
+
+        appendLabelledField("You can choose this", new FieldCheckbox(false, changeBx), "check1" ).setAlign( Blockly.ALIGN_RIGHT );
+        appendLabelledField("You can also choose this", new FieldCheckbox(true, changeBx), "check2" ).setAlign( Blockly.ALIGN_RIGHT );
+        appendLabelledField("This is another option", new FieldCheckbox(false, changeBx), "check3" ).setAlign( Blockly.ALIGN_RIGHT );
+        appendLabelledField("Or you can choose this one", new FieldCheckbox(false, changeBx), "check4" ).setAlign( Blockly.ALIGN_RIGHT );
     }
 }

@@ -22,7 +22,7 @@ class Main {
         application.registerBlock( DemoQuestions );
         application.registerBlock( KitchenSink );
 
-        application.inject("blocklyDiv", new BlocklyConfig()
+        application.inject("blocklyArea", new BlocklyConfig()
             .setMediaPath("media/")
             .useToolboxId("toolbox")
             .setGrid(new Grid())
@@ -30,17 +30,17 @@ class Main {
             .showTrashcan(true)
         );
 
-        application.addResizeHandler("blocklyArea");
-
         application.addSelectionChangeListener(function(){ trace("Selection Changed"); });
 
         resultArea = Browser.document.getElementById("resultArea");
+        application.loadWorkspaceFromLocalStorage("demo");
 
         Blockly.getMainWorkspace().addChangeListener(workspaceChanged);
     }
 
     function workspaceChanged() {
         trace("workspaceChanged");
+        application.workspaceToLocalStorage("demo");
 
         var xmlText = application.workspaceToPrettyXML();
         resultArea.innerText = xmlText;

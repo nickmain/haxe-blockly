@@ -1,6 +1,7 @@
 package app.blocks;
 
 import js.html.XMLHttpRequest;
+import js.html.Element;
 import blockly.Mutator;
 import blockly.Workspace;
 import blockly.FieldVariable;
@@ -16,12 +17,14 @@ import blockly.BlocklyApp;
 import blockly.CustomBlock;
 
 class KitchenSink extends CustomBlock {
+
+    var hasPrev: Bool = true;
+    var hasOut: Bool = true;
+
     public function new(block: Block, application: BlocklyApp) {
         super(block, application);
 
         block.setColour("#226622");
-        block.setOutput(true);
-        block.setPreviousStatement(true);
         block.setNextStatement(true);
         block.setTooltip("All field types");
         block.setHelpUrl("http://blog.nickmain.com");
@@ -58,7 +61,7 @@ class KitchenSink extends CustomBlock {
             .appendField(checkbox, "checkX" )
             .setAlign(Blockly.ALIGN_RIGHT);
 
-        checkbox.setChangeHandler(function(checked: Bool) {
+        checkbox.setValidator(function(checked: Bool) {
             if( checked && input1.connection.targetConnection == null ) {
                 var textBlock = block.workspace.newBlock("text");
                 input1.connection.connect( textBlock.outputConnection );
@@ -85,6 +88,39 @@ class KitchenSink extends CustomBlock {
         req.open("POST", "http://127.0.0.1:5000/save", true);
         req.send(application.workspaceToPrettyXML());
         return state;
+    }
+
+    override public function onChange(event: Dynamic) {
+        if(getPreviousBlock() != null) {
+            block.setOutput(false);
+            hasOut = false;
+            hasPrev = true;
+        }
+        else if(getOutputBlock() != null) {
+            block.setPreviousStatement(false);
+            hasOut = true;
+            hasPrev = false;
+        }
+        else {
+            block.setPreviousStatement(true);
+            block.setOutput(true);
+            hasOut = true;
+            hasPrev = true;
+        }
+    }
+
+    override public function domToMutation(e: Element) {
+        hasPrev = e.getAttribute("has_prev") == "true";
+        hasOut  = e.getAttribute("has_out") == "true";
+        if(hasPrev) block.setPreviousStatement(true);
+        if(hasOut) block.setOutput(true);
+    }
+
+    override public function mutationToDom(): Element {
+        var container = js.Browser.document.createElement('mutation');
+        container.setAttribute("has_prev", ""+hasPrev);
+        container.setAttribute("has_out", ""+hasOut);
+        return container;
     }
 
     override public function decompose(workspace: Workspace): Block {

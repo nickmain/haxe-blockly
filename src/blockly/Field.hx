@@ -18,5 +18,5 @@ extern class Field {
      * Sets a BlocklyApp change handler for editable fields.
      * @param {Function} handler New change handler, or null.
      */
-    public function setChangeHandler(changeHandler: Dynamic->Dynamic = null): Void;
+    public function setValidator(handler: Dynamic->Dynamic = null): Void;
 }
