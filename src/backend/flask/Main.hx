@@ -3,14 +3,14 @@ package backend.flask;
 class Main {
     static function main() {
         var app = new Flask(untyped __name__);
-        app.route("/")(index);
+        app.route("/", {methods:['GET','POST']})(index);
         app.route("/hello/<name>")(hello);
         app.debug = true;
         app.run();
     }
 
     static function index() {
-        return "Hello, world !!!";
+        return "Hello, world !!! " + Request.data;
     }
 
     static function hello(name: String) {
