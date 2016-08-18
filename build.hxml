@@ -5,9 +5,10 @@
 
 --next
 
--python build/main.py
--cp src
+-python ../haxe-blockly-flask-server/build/main.py
+-cp ../haxe-flask/src
+-cp ../haxe-blockly-flask-server/src
 -D dce=full
--main backend.flask.Main
+-main blockly.backend.flask.Main
 
 
