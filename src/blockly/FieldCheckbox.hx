@@ -7,8 +7,8 @@ abstract FieldCheckboxValue(String) from String to String {
 
     inline public function new(s: String) this = s;
 
-    @:from static public function fromBool(b: Bool) return b ? TRUE : FALSE;
-    @:to public function toBool() return this == "TRUE";
+    @:from static inline public function fromBool(b: Bool) return b ? TRUE : FALSE;
+    @:to public inline function toBool() return this == "TRUE";
 }
 
 

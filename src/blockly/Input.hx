@@ -21,7 +21,10 @@ extern class Input {
      */
     public function isVisible(): Bool;
 
-    // setVisible returns an array of things to be rendered and is probably not safe to call from Haxe
+    /**
+     * Returns an array of things to be rendered and is probably not safe to call from Haxe
+     **/
+    public function setVisible(visible: Bool): Array<Block>;
 
     /**
      * Change a connection's compatibility.

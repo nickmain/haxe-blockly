@@ -81,22 +81,30 @@ blockly_CustomBlock.prototype = {
 		}
 		return this.block.outputConnection.targetBlock();
 	}
-	,appendLabelledField: function(label,field,fieldName) {
-		return this.block.appendDummyInput().appendField(label).appendField(field,fieldName);
+	,appendLabelledField: function(label,field,fieldName,inputName) {
+		return this.block.appendDummyInput(inputName).appendField(label).appendField(field,fieldName);
 	}
 	,appendField: function(field,fieldName) {
 		return this.block.appendDummyInput().appendField(field,fieldName);
 	}
 };
 var app_blocks_DemoQuestions = function(block,application) {
+	var _gthis = this;
 	blockly_CustomBlock.call(this,block,application);
 	block.setColour("#ff0000");
 	block.setOutput(true);
 	block.setTooltip("Some possible choices");
-	this.appendLabelledField("You can choose this",new Blockly.FieldCheckbox(blockly__$FieldCheckbox_FieldCheckboxValue_$Impl_$.fromBool(false),null),"check1").setAlign(Blockly.ALIGN_RIGHT);
-	this.appendLabelledField("You can also choose this",new Blockly.FieldCheckbox(blockly__$FieldCheckbox_FieldCheckboxValue_$Impl_$.fromBool(true),null),"check2").setAlign(Blockly.ALIGN_RIGHT);
-	this.appendLabelledField("This is another option",new Blockly.FieldCheckbox(blockly__$FieldCheckbox_FieldCheckboxValue_$Impl_$.fromBool(false),null),"check3").setAlign(Blockly.ALIGN_RIGHT);
-	this.appendLabelledField("Or you can choose this one",new Blockly.FieldCheckbox(blockly__$FieldCheckbox_FieldCheckboxValue_$Impl_$.fromBool(false),null),"check4").setAlign(Blockly.ALIGN_RIGHT);
+	this.appendLabelledField("You can choose this",new Blockly.FieldCheckbox("FALSE",function(newValue) {
+		if(newValue) {
+			_gthis.appendLabelledField("Controlled by first checkbox",new Blockly.FieldCheckbox("FALSE",null),"check5","input5").setAlign(Blockly.ALIGN_RIGHT);
+		} else {
+			block.removeInput("input5",true);
+		}
+		return newValue;
+	}),"check1").setAlign(Blockly.ALIGN_RIGHT);
+	this.appendLabelledField("You can also choose this",new Blockly.FieldCheckbox("TRUE",null),"check2").setAlign(Blockly.ALIGN_RIGHT);
+	this.appendLabelledField("This is another option",new Blockly.FieldCheckbox("FALSE",null),"check3").setAlign(Blockly.ALIGN_RIGHT);
+	this.appendLabelledField("Or you can choose this one",new Blockly.FieldCheckbox("FALSE",null),"check4").setAlign(Blockly.ALIGN_RIGHT);
 };
 app_blocks_DemoQuestions.__name__ = ["app","blocks","DemoQuestions"];
 app_blocks_DemoQuestions.__super__ = blockly_CustomBlock;
@@ -135,7 +143,7 @@ var app_blocks_KitchenSink = function(block,application) {
 	block.setMutator(new Blockly.Mutator(["controls_if_elseif","controls_if_else"]));
 	block.appendDummyInput();
 	this.appendField(new Blockly.FieldImage("haxe.png",100,25),"img1").setAlign(Blockly.ALIGN_CENTRE);
-	this.appendLabelledField("Checkbox",new Blockly.FieldCheckbox(blockly__$FieldCheckbox_FieldCheckboxValue_$Impl_$.fromBool(false),$bind(this,this.checkboxChanged)),"check1").setAlign(Blockly.ALIGN_RIGHT);
+	this.appendLabelledField("Checkbox",new Blockly.FieldCheckbox("FALSE",$bind(this,this.checkboxChanged)),"check1").setAlign(Blockly.ALIGN_RIGHT);
 	this.appendLabelledField("Text Field",new Blockly.FieldTextInput("hello"),"text1").setAlign(Blockly.ALIGN_RIGHT);
 	this.appendLabelledField("Number Field",new Blockly.FieldTextInput("1.0",Blockly.FieldTextInput.numberValidator),"text2").setAlign(Blockly.ALIGN_RIGHT);
 	this.appendLabelledField("Int >0 Field",new Blockly.FieldTextInput("1",Blockly.FieldTextInput.nonnegativeIntegerValidator),"text3").setAlign(Blockly.ALIGN_RIGHT);
@@ -144,7 +152,7 @@ var app_blocks_KitchenSink = function(block,application) {
 	this.appendLabelledField("Custom Colors",new Blockly.FieldColour("#ffffe0").setColours(["#ffffe0","#ffff00","#ffd700","#eedd82","#daa520","#b8860b"]).setColumns(3),"color2").setAlign(Blockly.ALIGN_RIGHT);
 	this.appendLabelledField("Drop Down Menu",new Blockly.FieldDropdown([["foo","FOO"],["bar","BAR"],["bat","BAT"]]),"menu1").setAlign(Blockly.ALIGN_RIGHT);
 	this.appendLabelledField("Variable",new Blockly.FieldVariable("foo"),"var1").setAlign(Blockly.ALIGN_RIGHT);
-	var checkbox = new Blockly.FieldCheckbox(blockly__$FieldCheckbox_FieldCheckboxValue_$Impl_$.fromBool(false));
+	var checkbox = new Blockly.FieldCheckbox("FALSE");
 	var input1 = block.appendValueInput("input1").appendField(checkbox,"checkX").setAlign(Blockly.ALIGN_RIGHT);
 	checkbox.setValidator(function(checked) {
 		if(checked && input1.connection.targetConnection == null) {
@@ -309,15 +317,6 @@ blockly_BlocklyConfig.prototype = {
 	,useToolboxId: function(id) {
 		this.toolbox = window.document.getElementById(id);
 		return this;
-	}
-};
-var blockly__$FieldCheckbox_FieldCheckboxValue_$Impl_$ = {};
-blockly__$FieldCheckbox_FieldCheckboxValue_$Impl_$.__name__ = ["blockly","_FieldCheckbox","FieldCheckboxValue_Impl_"];
-blockly__$FieldCheckbox_FieldCheckboxValue_$Impl_$.fromBool = function(b) {
-	if(b) {
-		return "TRUE";
-	} else {
-		return "FALSE";
 	}
 };
 var js_Boot = function() { };

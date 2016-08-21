@@ -85,8 +85,8 @@ class CustomBlock {
      * Append a dummy input with a label field and another field.
      * return the input
      */
-    function appendLabelledField(label: String, field: Field, fieldName: String ): Input {
-        return block.appendDummyInput()
+    function appendLabelledField(label: String, field: Field, fieldName: String, inputName: String = null ): Input {
+        return block.appendDummyInput(inputName)
                     .appendField(label)
                     .appendField(field, fieldName);
     }
