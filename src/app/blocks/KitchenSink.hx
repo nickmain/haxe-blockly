@@ -11,6 +11,7 @@ import blockly.FieldAngle;
 import blockly.Blockly;
 import blockly.FieldCheckbox;
 import blockly.FieldColour;
+import blockly.FieldNumber;
 import blockly.FieldTextInput;
 import blockly.Block;
 import blockly.BlocklyApp;
@@ -40,6 +41,8 @@ class KitchenSink extends CustomBlock {
         appendLabelledField("Text Field", new FieldTextInput("hello"), "text1" ).setAlign(Blockly.ALIGN_RIGHT);
         appendLabelledField("Number Field", new FieldTextInput("1.0", FieldTextInput.numberValidator), "text2" ).setAlign(Blockly.ALIGN_RIGHT);
         appendLabelledField("Int >0 Field", new FieldTextInput("1", FieldTextInput.nonnegativeIntegerValidator), "text3" ).setAlign(Blockly.ALIGN_RIGHT);
+
+        appendLabelledField("Even 0..10", new FieldNumber(2, 0, 10, 2), "numfield" ).setAlign(Blockly.ALIGN_RIGHT);
 
         appendLabelledField("Angle Field", new FieldAngle("45", FieldAngle.angleValidator), "angle1" );
 

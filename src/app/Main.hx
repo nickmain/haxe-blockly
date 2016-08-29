@@ -16,7 +16,7 @@ class Main {
 
     public function new() {
         application = new BlocklyApp();
-        application.showStartBlockHats(true);
+        //application.showStartBlockHats(true);
 
         application.registerBlock( FooBarBlock );
         application.registerBlock( DemoQuestions );

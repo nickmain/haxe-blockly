@@ -23,7 +23,6 @@ Type.getClassName = function(c) {
 };
 var app_Main = function() {
 	this.application = new blockly_BlocklyApp();
-	this.application.showStartBlockHats(true);
 	this.application.registerBlock(app_blocks_FooBarBlock);
 	this.application.registerBlock(app_blocks_DemoQuestions);
 	this.application.registerBlock(app_blocks_KitchenSink);
@@ -147,6 +146,7 @@ var app_blocks_KitchenSink = function(block,application) {
 	this.appendLabelledField("Text Field",new Blockly.FieldTextInput("hello"),"text1").setAlign(Blockly.ALIGN_RIGHT);
 	this.appendLabelledField("Number Field",new Blockly.FieldTextInput("1.0",Blockly.FieldTextInput.numberValidator),"text2").setAlign(Blockly.ALIGN_RIGHT);
 	this.appendLabelledField("Int >0 Field",new Blockly.FieldTextInput("1",Blockly.FieldTextInput.nonnegativeIntegerValidator),"text3").setAlign(Blockly.ALIGN_RIGHT);
+	this.appendLabelledField("Even 0..10",new Blockly.FieldNumber(2,0,10,2),"numfield").setAlign(Blockly.ALIGN_RIGHT);
 	this.appendLabelledField("Angle Field",new Blockly.FieldAngle("45",Blockly.FieldAngle.angleValidator),"angle1");
 	this.appendLabelledField("Colors",new Blockly.FieldColour("#ff0000"),"color1").setAlign(Blockly.ALIGN_RIGHT);
 	this.appendLabelledField("Custom Colors",new Blockly.FieldColour("#ffffe0").setColours(["#ffffe0","#ffff00","#ffd700","#eedd82","#daa520","#b8860b"]).setColumns(3),"color2").setAlign(Blockly.ALIGN_RIGHT);
@@ -233,9 +233,6 @@ blockly_BlocklyApp.prototype = {
 				callback();
 			},false);
 		}
-	}
-	,showStartBlockHats: function(showHat) {
-		Blockly.BlockSvg.START_HAT = showHat;
 	}
 	,workspaceToPrettyXML: function() {
 		return Blockly.Xml.domToPrettyText(Blockly.Xml.workspaceToDom(this.workspace));
