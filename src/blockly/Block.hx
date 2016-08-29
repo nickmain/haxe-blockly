@@ -218,12 +218,12 @@ extern class Block {
     /**
      * Set whether value inputs are arranged horizontally or vertically.
      */
-    public function setInputsInline(isInline: Bool): Void;
+    public function setInputsInline(isInline: Null<Bool>): Void;
 
     /**
      * Get whether value inputs are arranged horizontally or vertically.
      */
-    public function getInputsInline(): Bool;
+    public function getInputsInline(): Null<Bool>;
 
     /**
      * Set whether the block is disabled or not.
