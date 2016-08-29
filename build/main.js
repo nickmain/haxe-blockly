@@ -139,6 +139,8 @@ var app_blocks_KitchenSink = function(block,application) {
 	block.setHelpUrl("http://blog.nickmain.com");
 	block.setCommentText("Everything but the kitchen sink.");
 	block.setWarningText("There are things yet to do.");
+	block.data = "This is some metadata";
+	block.setDeletable(true);
 	block.setMutator(new Blockly.Mutator(["controls_if_elseif","controls_if_else"]));
 	block.appendDummyInput();
 	this.appendField(new Blockly.FieldImage("haxe.png",100,25),"img1").setAlign(Blockly.ALIGN_CENTRE);

@@ -31,6 +31,10 @@ class KitchenSink extends CustomBlock {
         block.setHelpUrl("http://blog.nickmain.com");
         block.setCommentText("Everything but the kitchen sink.");
         block.setWarningText("There are things yet to do.");
+        block.data = "This is some metadata";
+
+        block.setDeletable(true);
+
 
         block.setMutator(new Mutator(['controls_if_elseif', 'controls_if_else']));
 
