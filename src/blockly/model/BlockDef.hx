@@ -4,7 +4,9 @@ package blockly.model;
  * Definition models for blocks
  */
 
-enum FieldAlignment { Left; Right; Center; }
+enum BlockDef {
+    
+}
 
 enum InputDef {
     Dummy(alignment: FieldAlignment, fields: Array<FieldDef>);
@@ -18,6 +20,7 @@ enum FieldDef {
     Angle(name: String, value: Int);
     DropDown(name: String, value: String, options: Array<{value: String, text: String}>);
     Colour(name: String, value: String);
+    CustomColours(name: String, value: String, cols: Int, colours: Array<String>);
     CheckBox(name: String, value: Bool);
     Variable(name: String, value: String);
     Image(url: String, w: Int, h: Int, alt: String);
@@ -31,7 +34,4 @@ enum ValueType {
     CustomType(name: String);
 }
 
-class BlockDef {
-    public function new() {
-    }
-}
+enum FieldAlignment { Left; Right; Center; }

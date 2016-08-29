@@ -25,6 +25,9 @@ typedef BlockS12 = {
     fields: Null<Array<FieldS12>>
 }
 
-typedef InputS12 = { name: String, block: Null<BlockS12>, shadow: Null<BlockS12> }
+enum InputS12 {
+    ValueInput(name: String, block: Null<BlockS12>, shadow: Null<BlockS12>);
+    Statement(name: String, block: Null<BlockS12>);
+}
 
 typedef FieldS12 = { name: String, value: String }
