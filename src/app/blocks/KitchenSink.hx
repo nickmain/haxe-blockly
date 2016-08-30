@@ -11,7 +11,6 @@ import js.html.Element;
 import blockly.Mutator;
 import blockly.Workspace;
 import blockly.FieldVariable;
-import blockly.FieldImage;
 import blockly.FieldDropdown;
 import blockly.FieldAngle;
 import blockly.Blockly;
@@ -34,13 +33,9 @@ class KitchenSink extends CustomBlock {
         builder =  new BlockBuilder(block);
 
         builder.build({
-            connections: {
-                topType: ValueType.AnyType,
-                bottomType: ValueType.AnyType,
-                outType: ValueType.BoolType
-            },
-            inlining: Inlining.Automatic,
-            colour  : BlockColour.RGBColour("#009900"),
+            connections: { topType: AnyType, bottomType: AnyType, outType: BoolType },
+            inlining: Automatic,
+            colour  : RGBColour("#009900"),
             tooltip : "All fields except the kitchen sink",
             warning : "There are things yet to do !",
             help    : "http://blog.nickmain.com",
@@ -116,31 +111,19 @@ class KitchenSink extends CustomBlock {
 
     override public function onChange(event: Dynamic) {
         if(getPreviousBlock() != null) {
-            builder.setConnections({
-                topType: ValueType.AnyType,
-                bottomType: ValueType.AnyType,
-                outType: null
-            });
+            builder.setConnections({ topType: AnyType, bottomType: AnyType, outType: null });
 
             hasOut = false;
             hasPrev = true;
         }
         else if(getOutputBlock() != null) {
-            builder.setConnections({
-                topType: null,
-                bottomType: ValueType.AnyType,
-                outType: ValueType.BoolType
-            });
+            builder.setConnections({ topType: null, bottomType: AnyType, outType: BoolType });
 
             hasOut = true;
             hasPrev = false;
         }
         else {
-            builder.setConnections({
-                topType: ValueType.AnyType,
-                bottomType: ValueType.AnyType,
-                outType: ValueType.BoolType
-            });
+            builder.setConnections({ topType: AnyType, bottomType: AnyType, outType: BoolType });
 
             hasOut = true;
             hasPrev = true;

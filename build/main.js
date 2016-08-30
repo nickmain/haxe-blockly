@@ -380,7 +380,6 @@ blockly_model_BlockBuilder.prototype = {
 				var i1 = this.block.appendDummyInput(field.name);
 				i1.setAlign(this.fieldAlignment(input[3]));
 				i1.appendField(input[2]);
-				console.log("appending check " + Std.string(field));
 				i1.appendField(field.field,field.name);
 				break;
 			case 2:
