@@ -4,18 +4,38 @@ package blockly.model;
  * Definition models for blocks
  */
 
-enum BlockDef {
-    
+typedef BlockDef = {
+    connections: Null<ConnectionTypes>,
+    inlining: Inlining,
+    colour: BlockColour,
+    tooltip: String,
+    warning: Null<String>,
+    help: String,
+    inputs: Array<InputDef>
 }
 
+typedef ConnectionTypes = {
+    topType: Null<ValueType>,    // null = no top connection
+    bottomType: Null<ValueType>, // null = no bottom connection
+    outType: Null<ValueType>     // null = no output connection
+}
+
+enum BlockColour {
+    HSVColour(value: Int);
+    RGBColour(value: String);
+}
+
+enum Inlining { Automatic; External; Internal; }
+
 enum InputDef {
-    Dummy(alignment: FieldAlignment, fields: Array<FieldDef>);
+    Dummy(name: String, alignment: FieldAlignment, fields: Array<FieldDef>);
+    LabelledField(label: String, alignment: FieldAlignment, field: FieldDef);
     Value(name: String, type: ValueType, alignment: FieldAlignment, fields: Array<FieldDef>);
     Statement(name: String, type: ValueType, alignment: FieldAlignment, fields: Array<FieldDef>);
 }
 
 enum FieldDef {
-    TextLabel(text: String);
+    TextLabel(text: String, cssClass: String);
     TextInput(name: String, text: String);
     Angle(name: String, value: Int);
     DropDown(name: String, value: String, options: Array<{value: String, text: String}>);

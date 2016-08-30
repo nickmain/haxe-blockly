@@ -3,6 +3,8 @@ package blockly;
 @:native("Blockly.Field")
 extern class Field {
 
+    public var name: String;
+
     public function getValue(): String;
     public function setValue(value: String): Void;
 

@@ -36,7 +36,7 @@ extern class Block {
     /**
      * The Inputs of the block
      */
-    public var inputList: Array<Input>;
+    public var inputList(default,null): Array<Input>;
 
     /**
      * The workspace the block belongs to

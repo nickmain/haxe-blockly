@@ -1,5 +1,11 @@
 package app.blocks;
 
+import blockly.model.BlockDef.BlockColour;
+import blockly.model.BlockDef.Inlining;
+import blockly.model.BlockDef.ValueType;
+import blockly.model.BlockDef.InputDef;
+import blockly.model.BlockDef.FieldDef;
+import blockly.model.BlockBuilder;
 import js.html.XMLHttpRequest;
 import js.html.Element;
 import blockly.Mutator;
@@ -21,26 +27,37 @@ class KitchenSink extends CustomBlock {
 
     var hasPrev: Bool = true;
     var hasOut: Bool = true;
+    var builder: BlockBuilder;
 
     public function new(block: Block, application: BlocklyApp) {
         super(block, application);
+        builder =  new BlockBuilder(block);
 
-        block.setColour("#226622");
-        block.setNextStatement(true);
-        block.setTooltip("All field types");
-        block.setHelpUrl("http://blog.nickmain.com");
+        builder.build({
+            connections: {
+                topType: ValueType.AnyType,
+                bottomType: ValueType.AnyType,
+                outType: ValueType.BoolType
+            },
+            inlining: Inlining.Automatic,
+            colour  : BlockColour.RGBColour("#009900"),
+            tooltip : "All fields except the kitchen sink",
+            warning : "There are things yet to do !",
+            help    : "http://blog.nickmain.com",
+            inputs  : [
+                Dummy("toprow", Left, []),
+                Dummy("image", Center, [Image("haxe.png", 100, 25, "Haxe Logo")]),
+                LabelledField("A Checkbox", Right, CheckBox("check1", false))
+            ]
+        });
+
         block.setCommentText("Everything but the kitchen sink.");
-        block.setWarningText("There are things yet to do.");
+
         block.data = "This is some metadata";
 
         block.setDeletable(true);
 
-
         block.setMutator(new Mutator(['controls_if_elseif', 'controls_if_else']));
-
-        block.appendDummyInput();
-        appendField(new FieldImage("haxe.png", 100, 25 ), "img1").setAlign(Blockly.ALIGN_CENTRE);
-        appendLabelledField("Checkbox", new FieldCheckbox(false, checkboxChanged), "check1" ).setAlign(Blockly.ALIGN_RIGHT);
 
         appendLabelledField("Text Field", new FieldTextInput("hello"), "text1" ).setAlign(Blockly.ALIGN_RIGHT);
         appendLabelledField("Number Field", new FieldTextInput("1.0", FieldTextInput.numberValidator), "text2" ).setAlign(Blockly.ALIGN_RIGHT);
@@ -99,18 +116,32 @@ class KitchenSink extends CustomBlock {
 
     override public function onChange(event: Dynamic) {
         if(getPreviousBlock() != null) {
-            block.setOutput(false);
+            builder.setConnections({
+                topType: ValueType.AnyType,
+                bottomType: ValueType.AnyType,
+                outType: null
+            });
+
             hasOut = false;
             hasPrev = true;
         }
         else if(getOutputBlock() != null) {
-            block.setPreviousStatement(false);
+            builder.setConnections({
+                topType: null,
+                bottomType: ValueType.AnyType,
+                outType: ValueType.BoolType
+            });
+
             hasOut = true;
             hasPrev = false;
         }
         else {
-            block.setPreviousStatement(true);
-            block.setOutput(true);
+            builder.setConnections({
+                topType: ValueType.AnyType,
+                bottomType: ValueType.AnyType,
+                outType: ValueType.BoolType
+            });
+
             hasOut = true;
             hasPrev = true;
         }

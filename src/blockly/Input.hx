@@ -3,6 +3,8 @@ package blockly;
 @:native("Blockly.Input")
 extern class Input {
 
+    public var name(default,null): String;
+
     /**
      * Append a label or Field
      */
