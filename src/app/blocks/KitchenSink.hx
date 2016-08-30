@@ -1,10 +1,5 @@
 package app.blocks;
 
-import blockly.model.BlockDef.BlockColour;
-import blockly.model.BlockDef.Inlining;
-import blockly.model.BlockDef.ValueType;
-import blockly.model.BlockDef.InputDef;
-import blockly.model.BlockDef.FieldDef;
 import blockly.model.BlockBuilder;
 import js.html.XMLHttpRequest;
 import js.html.Element;
