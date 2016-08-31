@@ -23,7 +23,7 @@ class KitchenSink extends CustomBlock {
             connections: { topType: AnyType, bottomType: AnyType, outType: BoolType },
             inlining: Automatic,
             colour  : RGBColour("#009900"),
-            tooltip : "All fields except the kitchen sink",
+            tooltip : Fixed("All fields except the kitchen sink"),
             warning : "There are things yet to do !",
             help    : "http://blog.nickmain.com",
             inputs  : [

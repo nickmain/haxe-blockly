@@ -33,7 +33,11 @@ class BlockBuilder {
             case RGBColour(value): block.setColour(value);
         };
 
-        block.setTooltip(def.tooltip);
+        switch(def.tooltip) {
+            case Fixed(tooltip): block.setTooltip(tooltip);
+            case Computed(generator): block.setTooltip(generator);
+        }
+
         block.setWarningText(def.warning);
         block.setHelpUrl(def.help);
 
@@ -128,7 +132,8 @@ class BlockBuilder {
         return switch(field) {
             case Image(url, w, h, alt): {name: null, field: new FieldImage(url, w, h, alt)};
             case CheckBox(name, value): {name: name, field: new FieldCheckbox(value)};
-            case TextLabel(text, cssClass): {name: null, field: new FieldLabel(text, cssClass)};
+            case TextLabel(text): {name: null, field: new FieldLabel(text)};
+            case StyledLabel(text, cssClass): {name: null, field: new FieldLabel(text, cssClass)};
             case TextInput(name, text): {name: name, field: new FieldTextInput(text)};
             case Numeric(name, value, min, max, precision): {name: name, field: new FieldNumber(value, min, max, precision)};
             case Angle(name, value): {name: name, field: new FieldAngle('$value')};

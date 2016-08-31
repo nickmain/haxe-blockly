@@ -8,11 +8,16 @@ typedef BlockDef = {
     connections: Null<ConnectionTypes>,
     inlining: Inlining,
     colour: BlockColour,
-    tooltip: String,
+    tooltip: Tooltip,
     warning: Null<String>,
     help: String,
     inputs: Array<InputDef>,
     validators: Array<Validator>
+}
+
+enum Tooltip {
+    Fixed(tooltip: String);
+    Computed(generator: Void->String);
 }
 
 enum Validator {
@@ -41,7 +46,8 @@ enum InputDef {
 }
 
 enum FieldDef {
-    TextLabel(text: String, cssClass: String);
+    TextLabel(text: String);
+    StyledLabel(text: String, cssClass: String);
     TextInput(name: String, text: String);
     SpellcheckedTextInput(name: String, text: String);
     Angle(name: String, value: Int);
