@@ -81,6 +81,28 @@ blockly_CustomBlock.prototype = {
 		}
 		return this.block.outputConnection.targetBlock();
 	}
+	,getInputBlock: function(inputName) {
+		var input = this.block.getInput(inputName);
+		if(input == null) {
+			return null;
+		}
+		return input.connection.targetBlock();
+	}
+	,attachBlock: function(inputName,blockType) {
+		var input = this.block.getInput(inputName);
+		var newBlock = this.block.workspace.newBlock(blockType);
+		input.connection.connect(newBlock.outputConnection);
+		newBlock.initSvg();
+		newBlock.render(true);
+		return newBlock;
+	}
+	,detachBlock: function(inputName) {
+		var otherBlock = this.getInputBlock(inputName);
+		if(otherBlock != null) {
+			otherBlock.unplug(true,true);
+		}
+		return otherBlock;
+	}
 	,appendLabelledField: function(label,field,fieldName,inputName) {
 		return this.block.appendDummyInput(inputName).appendField(label).appendField(field,fieldName);
 	}
@@ -135,42 +157,44 @@ var app_blocks_KitchenSink = function(block,application) {
 	this.hasPrev = true;
 	blockly_CustomBlock.call(this,block,application);
 	this.builder = new blockly_model_BlockBuilder(block);
-	this.builder.build({ connections : { topType : blockly_model_ValueType.AnyType, bottomType : blockly_model_ValueType.AnyType, outType : blockly_model_ValueType.BoolType}, inlining : blockly_model_Inlining.Automatic, colour : blockly_model_BlockColour.RGBColour("#009900"), tooltip : "All fields except the kitchen sink", warning : "There are things yet to do !", help : "http://blog.nickmain.com", inputs : [blockly_model_InputDef.Dummy("toprow",blockly_model_FieldAlignment.Left,[]),blockly_model_InputDef.Dummy("image",blockly_model_FieldAlignment.Center,[blockly_model_FieldDef.Image("haxe.png",100,25,"Haxe Logo")]),blockly_model_InputDef.LabelledField("A Checkbox",blockly_model_FieldAlignment.Right,blockly_model_FieldDef.CheckBox("check1",false))]});
+	this.builder.build({ connections : { topType : blockly_model_ValueType.AnyType, bottomType : blockly_model_ValueType.AnyType, outType : blockly_model_ValueType.BoolType}, inlining : blockly_model_Inlining.Automatic, colour : blockly_model_BlockColour.RGBColour("#009900"), tooltip : "All fields except the kitchen sink", warning : "There are things yet to do !", help : "http://blog.nickmain.com", inputs : [blockly_model_InputDef.Dummy("toprow",blockly_model_FieldAlignment.Left,[]),blockly_model_InputDef.Dummy("image",blockly_model_FieldAlignment.Center,[blockly_model_FieldDef.Image("haxe.png",100,25,"Haxe Logo")]),blockly_model_InputDef.LabelledField("A Checkbox",blockly_model_FieldAlignment.Right,blockly_model_FieldDef.CheckBox("check1",false)),blockly_model_InputDef.LabelledField("Text Field",blockly_model_FieldAlignment.Right,blockly_model_FieldDef.TextInput("text1","some text")),blockly_model_InputDef.LabelledField("Spellchecked",blockly_model_FieldAlignment.Right,blockly_model_FieldDef.SpellcheckedTextInput("textspell","some text")),blockly_model_InputDef.LabelledField("Even 0..10",blockly_model_FieldAlignment.Right,blockly_model_FieldDef.Numeric("numfield",2,0,10,2)),blockly_model_InputDef.LabelledField("Angle Field",blockly_model_FieldAlignment.Left,blockly_model_FieldDef.Angle("angle1",45)),blockly_model_InputDef.LabelledField("Colour",blockly_model_FieldAlignment.Right,blockly_model_FieldDef.Colour("color1","#ffff00")),blockly_model_InputDef.LabelledField("Custom Colours",blockly_model_FieldAlignment.Right,blockly_model_FieldDef.CustomColours("color2","#ffd700",3,["#ffffe0","#ffff00","#ffd700","#eedd82","#daa520","#b8860b"])),blockly_model_InputDef.LabelledField("Drop Down Menu",blockly_model_FieldAlignment.Right,blockly_model_FieldDef.DropDown("menu1","BAR",[["foo","FOO"],["bar","BAR"],["bat","BAT"]])),blockly_model_InputDef.LabelledField("Generated Menu",blockly_model_FieldAlignment.Right,blockly_model_FieldDef.DropDownGen("menu2",null,$bind(this,this.randomMenu))),blockly_model_InputDef.LabelledField("Variable",blockly_model_FieldAlignment.Right,blockly_model_FieldDef.Variable("var1","foo")),blockly_model_InputDef.Value("input1",blockly_model_ValueType.AnyType,blockly_model_FieldAlignment.Right,[blockly_model_FieldDef.CheckBox("checkX",false)])], validators : [blockly_model_Validator.Callback("checkX",$bind(this,this.funkyCheckInput))]});
 	block.setCommentText("Everything but the kitchen sink.");
 	block.data = "This is some metadata";
 	block.setDeletable(true);
 	block.setMutator(new Blockly.Mutator(["controls_if_elseif","controls_if_else"]));
-	this.appendLabelledField("Text Field",new Blockly.FieldTextInput("hello"),"text1").setAlign(Blockly.ALIGN_RIGHT);
-	this.appendLabelledField("Number Field",new Blockly.FieldTextInput("1.0",Blockly.FieldTextInput.numberValidator),"text2").setAlign(Blockly.ALIGN_RIGHT);
-	this.appendLabelledField("Int >0 Field",new Blockly.FieldTextInput("1",Blockly.FieldTextInput.nonnegativeIntegerValidator),"text3").setAlign(Blockly.ALIGN_RIGHT);
-	this.appendLabelledField("Even 0..10",new Blockly.FieldNumber(2,0,10,2),"numfield").setAlign(Blockly.ALIGN_RIGHT);
-	this.appendLabelledField("Angle Field",new Blockly.FieldAngle("45",Blockly.FieldAngle.angleValidator),"angle1");
-	this.appendLabelledField("Colors",new Blockly.FieldColour("#ff0000"),"color1").setAlign(Blockly.ALIGN_RIGHT);
-	this.appendLabelledField("Custom Colors",new Blockly.FieldColour("#ffffe0").setColours(["#ffffe0","#ffff00","#ffd700","#eedd82","#daa520","#b8860b"]).setColumns(3),"color2").setAlign(Blockly.ALIGN_RIGHT);
-	this.appendLabelledField("Drop Down Menu",new Blockly.FieldDropdown([["foo","FOO"],["bar","BAR"],["bat","BAT"]]),"menu1").setAlign(Blockly.ALIGN_RIGHT);
-	this.appendLabelledField("Variable",new Blockly.FieldVariable("foo"),"var1").setAlign(Blockly.ALIGN_RIGHT);
-	var checkbox = new Blockly.FieldCheckbox("FALSE");
-	var input1 = block.appendValueInput("input1").appendField(checkbox,"checkX").setAlign(Blockly.ALIGN_RIGHT);
-	checkbox.setValidator(function(checked) {
-		if(checked && input1.connection.targetConnection == null) {
-			var textBlock = block.workspace.newBlock("text");
-			input1.connection.connect(textBlock.outputConnection);
-			textBlock.setFieldValue("Hello World","TEXT");
-			textBlock.initSvg();
-			textBlock.render(true);
-		} else if(input1.connection.targetBlock() != null) {
-			input1.connection.targetBlock().setWarningText("Unplugged - discard whenever");
-			input1.connection.targetBlock().warning.setVisible(true);
-			input1.connection.targetBlock().setDisabled(true);
-			input1.connection.targetBlock().unplug(true,true);
-		}
-		return checked;
-	});
 };
 app_blocks_KitchenSink.__name__ = ["app","blocks","KitchenSink"];
 app_blocks_KitchenSink.__super__ = blockly_CustomBlock;
 app_blocks_KitchenSink.prototype = $extend(blockly_CustomBlock.prototype,{
-	checkboxChanged: function(state) {
+	funkyCheckInput: function(checked) {
+		if(checked) {
+			var inputBlock = this.getInputBlock("input1");
+			if(inputBlock == null) {
+				inputBlock = this.attachBlock("input1","text");
+				inputBlock.setFieldValue("Hello World","TEXT");
+			}
+		} else {
+			var inputBlock1 = this.detachBlock("input1");
+			if(inputBlock1 != null) {
+				inputBlock1.setWarningText("Unplugged - discard at your leisure");
+				inputBlock1.warning.setVisible(true);
+				inputBlock1.setDisabled(true);
+			}
+		}
+		return checked;
+	}
+	,randomMenu: function() {
+		var opts = [];
+		var _g = 0;
+		while(_g < 5) {
+			++_g;
+			var opt = "# " + Math.round(Math.random() * 1000);
+			opts.push([opt,opt]);
+		}
+		console.log(opts.toString());
+		return opts;
+	}
+	,checkboxChanged: function(state) {
 		var req = new XMLHttpRequest();
 		req.overrideMimeType("text/xml");
 		req.open("POST","http://127.0.0.1:5000/save",true);
@@ -195,12 +219,7 @@ app_blocks_KitchenSink.prototype = $extend(blockly_CustomBlock.prototype,{
 	,domToMutation: function(e) {
 		this.hasPrev = e.getAttribute("has_prev") == "true";
 		this.hasOut = e.getAttribute("has_out") == "true";
-		if(this.hasPrev) {
-			this.block.setPreviousStatement(true);
-		}
-		if(this.hasOut) {
-			this.block.setOutput(true);
-		}
+		this.builder.setConnections({ topType : this.hasPrev?blockly_model_ValueType.AnyType:null, bottomType : blockly_model_ValueType.AnyType, outType : this.hasOut?blockly_model_ValueType.BoolType:null});
 	}
 	,mutationToDom: function() {
 		var container = window.document.createElement("mutation");
@@ -243,7 +262,7 @@ blockly_BlocklyApp.prototype = {
 		if(xml == null) {
 			return false;
 		}
-		Blockly.Xml.domToWorkspace(this.workspace,Blockly.Xml.textToDom(xml));
+		Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(xml),this.workspace);
 		return true;
 	}
 	,registerBlock: function(clazz) {
@@ -346,8 +365,15 @@ blockly_model_BlockBuilder.prototype = {
 		this.block.setWarningText(def.warning);
 		this.block.setHelpUrl(def.help);
 		this.addInputs(def.inputs);
+		this.addValidators(def.validators);
 	}
 	,setConnections: function(connections) {
+		if(connections == null) {
+			this.block.setPreviousStatement(false);
+			this.block.setNextStatement(false);
+			this.block.setOutput(false);
+			return;
+		}
 		if(connections.topType != null) {
 			this.block.setPreviousStatement(true,this.typeString(connections.topType));
 		} else {
@@ -362,6 +388,28 @@ blockly_model_BlockBuilder.prototype = {
 			this.block.setOutput(true,this.typeString(connections.outType));
 		} else {
 			this.block.setOutput(false);
+		}
+	}
+	,addValidators: function(validators) {
+		var _g = 0;
+		while(_g < validators.length) {
+			var v = validators[_g];
+			++_g;
+			switch(v[1]) {
+			case 0:
+				var callback = v[3];
+				var f = this.block.getField(v[2]);
+				if(f != null) {
+					f.setValidator(callback);
+				}
+				break;
+			case 1:
+				var f1 = this.block.getField(v[2]);
+				if(f1 != null) {
+					f1.setValidator(null);
+				}
+				break;
+			}
 		}
 	}
 	,addInputs: function(inputs) {
@@ -408,12 +456,57 @@ blockly_model_BlockBuilder.prototype = {
 	}
 	,createField: function(field) {
 		switch(field[1]) {
+		case 0:
+			return { name : null, field : new Blockly.FieldLabel(field[2],field[3])};
+		case 1:
+			return { name : field[2], field : new Blockly.FieldTextInput(field[3])};
+		case 2:
+			var text = field[3];
+			var name = field[2];
+			var f = new Blockly.FieldTextInput(text);
+			f.setSpellcheck(true);
+			return { name : name, field : f};
+		case 3:
+			return { name : field[2], field : new Blockly.FieldAngle("" + field[3])};
+		case 4:
+			var options = field[4];
+			var value = field[3];
+			var name1 = field[2];
+			var f1 = new Blockly.FieldDropdown(options);
+			if(value != null) {
+				f1.setValue(value);
+			}
+			return { name : name1, field : f1};
+		case 5:
+			var generator = field[4];
+			var value1 = field[3];
+			var name2 = field[2];
+			var f2 = new Blockly.FieldDropdown(generator);
+			if(value1 != null) {
+				f2.setValue(value1);
+			}
+			return { name : name2, field : f2};
 		case 6:
-			return { name : field[2], field : new Blockly.FieldCheckbox(field[3]?"TRUE":"FALSE")};
+			return { name : field[2], field : new Blockly.FieldColour(field[3])};
+		case 7:
+			var colours = field[5];
+			var cols = field[4];
+			var value2 = field[3];
+			var name3 = field[2];
+			var f3 = new Blockly.FieldColour(value2);
+			f3.setColumns(cols);
+			f3.setColours(colours);
+			return { name : name3, field : f3};
 		case 8:
+			return { name : field[2], field : new Blockly.FieldCheckbox(field[3]?"TRUE":"FALSE")};
+		case 9:
+			return { name : field[2], field : new Blockly.FieldVariable(field[3])};
+		case 10:
 			return { name : null, field : new Blockly.FieldImage(field[2],field[3],field[4],field[5])};
-		default:
-			return null;
+		case 11:
+			return { name : field[2], field : new Blockly.FieldNumber(field[3],field[4],field[5],field[6])};
+		case 12:
+			return { name : field[2], field : new Blockly.FieldDate(field[3])};
 		}
 	}
 	,fieldAlignment: function(alignment) {
@@ -453,6 +546,9 @@ blockly_model_BlockBuilder.prototype = {
 		}
 	}
 };
+var blockly_model_Validator = { __ename__ : true, __constructs__ : ["Callback","Clear"] };
+blockly_model_Validator.Callback = function(fieldName,callback) { var $x = ["Callback",0,fieldName,callback]; $x.__enum__ = blockly_model_Validator; $x.toString = $estr; return $x; };
+blockly_model_Validator.Clear = function(fieldName) { var $x = ["Clear",1,fieldName]; $x.__enum__ = blockly_model_Validator; $x.toString = $estr; return $x; };
 var blockly_model_BlockColour = { __ename__ : true, __constructs__ : ["HSVColour","RGBColour"] };
 blockly_model_BlockColour.HSVColour = function(value) { var $x = ["HSVColour",0,value]; $x.__enum__ = blockly_model_BlockColour; $x.toString = $estr; return $x; };
 blockly_model_BlockColour.RGBColour = function(value) { var $x = ["RGBColour",1,value]; $x.__enum__ = blockly_model_BlockColour; $x.toString = $estr; return $x; };
@@ -471,18 +567,20 @@ blockly_model_InputDef.Dummy = function(name,alignment,fields) { var $x = ["Dumm
 blockly_model_InputDef.LabelledField = function(label,alignment,field) { var $x = ["LabelledField",1,label,alignment,field]; $x.__enum__ = blockly_model_InputDef; $x.toString = $estr; return $x; };
 blockly_model_InputDef.Value = function(name,type,alignment,fields) { var $x = ["Value",2,name,type,alignment,fields]; $x.__enum__ = blockly_model_InputDef; $x.toString = $estr; return $x; };
 blockly_model_InputDef.Statement = function(name,type,alignment,fields) { var $x = ["Statement",3,name,type,alignment,fields]; $x.__enum__ = blockly_model_InputDef; $x.toString = $estr; return $x; };
-var blockly_model_FieldDef = { __ename__ : true, __constructs__ : ["TextLabel","TextInput","Angle","DropDown","Colour","CustomColours","CheckBox","Variable","Image","Numeric","DateSelect"] };
+var blockly_model_FieldDef = { __ename__ : true, __constructs__ : ["TextLabel","TextInput","SpellcheckedTextInput","Angle","DropDown","DropDownGen","Colour","CustomColours","CheckBox","Variable","Image","Numeric","DateSelect"] };
 blockly_model_FieldDef.TextLabel = function(text,cssClass) { var $x = ["TextLabel",0,text,cssClass]; $x.__enum__ = blockly_model_FieldDef; $x.toString = $estr; return $x; };
 blockly_model_FieldDef.TextInput = function(name,text) { var $x = ["TextInput",1,name,text]; $x.__enum__ = blockly_model_FieldDef; $x.toString = $estr; return $x; };
-blockly_model_FieldDef.Angle = function(name,value) { var $x = ["Angle",2,name,value]; $x.__enum__ = blockly_model_FieldDef; $x.toString = $estr; return $x; };
-blockly_model_FieldDef.DropDown = function(name,value,options) { var $x = ["DropDown",3,name,value,options]; $x.__enum__ = blockly_model_FieldDef; $x.toString = $estr; return $x; };
-blockly_model_FieldDef.Colour = function(name,value) { var $x = ["Colour",4,name,value]; $x.__enum__ = blockly_model_FieldDef; $x.toString = $estr; return $x; };
-blockly_model_FieldDef.CustomColours = function(name,value,cols,colours) { var $x = ["CustomColours",5,name,value,cols,colours]; $x.__enum__ = blockly_model_FieldDef; $x.toString = $estr; return $x; };
-blockly_model_FieldDef.CheckBox = function(name,value) { var $x = ["CheckBox",6,name,value]; $x.__enum__ = blockly_model_FieldDef; $x.toString = $estr; return $x; };
-blockly_model_FieldDef.Variable = function(name,value) { var $x = ["Variable",7,name,value]; $x.__enum__ = blockly_model_FieldDef; $x.toString = $estr; return $x; };
-blockly_model_FieldDef.Image = function(url,w,h,alt) { var $x = ["Image",8,url,w,h,alt]; $x.__enum__ = blockly_model_FieldDef; $x.toString = $estr; return $x; };
-blockly_model_FieldDef.Numeric = function(name,value,min,max,precision) { var $x = ["Numeric",9,name,value,min,max,precision]; $x.__enum__ = blockly_model_FieldDef; $x.toString = $estr; return $x; };
-blockly_model_FieldDef.DateSelect = function(name,value) { var $x = ["DateSelect",10,name,value]; $x.__enum__ = blockly_model_FieldDef; $x.toString = $estr; return $x; };
+blockly_model_FieldDef.SpellcheckedTextInput = function(name,text) { var $x = ["SpellcheckedTextInput",2,name,text]; $x.__enum__ = blockly_model_FieldDef; $x.toString = $estr; return $x; };
+blockly_model_FieldDef.Angle = function(name,value) { var $x = ["Angle",3,name,value]; $x.__enum__ = blockly_model_FieldDef; $x.toString = $estr; return $x; };
+blockly_model_FieldDef.DropDown = function(name,value,options) { var $x = ["DropDown",4,name,value,options]; $x.__enum__ = blockly_model_FieldDef; $x.toString = $estr; return $x; };
+blockly_model_FieldDef.DropDownGen = function(name,value,generator) { var $x = ["DropDownGen",5,name,value,generator]; $x.__enum__ = blockly_model_FieldDef; $x.toString = $estr; return $x; };
+blockly_model_FieldDef.Colour = function(name,value) { var $x = ["Colour",6,name,value]; $x.__enum__ = blockly_model_FieldDef; $x.toString = $estr; return $x; };
+blockly_model_FieldDef.CustomColours = function(name,value,cols,colours) { var $x = ["CustomColours",7,name,value,cols,colours]; $x.__enum__ = blockly_model_FieldDef; $x.toString = $estr; return $x; };
+blockly_model_FieldDef.CheckBox = function(name,value) { var $x = ["CheckBox",8,name,value]; $x.__enum__ = blockly_model_FieldDef; $x.toString = $estr; return $x; };
+blockly_model_FieldDef.Variable = function(name,value) { var $x = ["Variable",9,name,value]; $x.__enum__ = blockly_model_FieldDef; $x.toString = $estr; return $x; };
+blockly_model_FieldDef.Image = function(url,w,h,alt) { var $x = ["Image",10,url,w,h,alt]; $x.__enum__ = blockly_model_FieldDef; $x.toString = $estr; return $x; };
+blockly_model_FieldDef.Numeric = function(name,value,min,max,precision) { var $x = ["Numeric",11,name,value,min,max,precision]; $x.__enum__ = blockly_model_FieldDef; $x.toString = $estr; return $x; };
+blockly_model_FieldDef.DateSelect = function(name,date) { var $x = ["DateSelect",12,name,date]; $x.__enum__ = blockly_model_FieldDef; $x.toString = $estr; return $x; };
 var blockly_model_ValueType = { __ename__ : true, __constructs__ : ["AnyType","BoolType","NumType","StringType","ListType","UnionType","CustomType"] };
 blockly_model_ValueType.AnyType = ["AnyType",0];
 blockly_model_ValueType.AnyType.toString = $estr;

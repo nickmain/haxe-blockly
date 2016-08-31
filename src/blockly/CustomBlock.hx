@@ -75,6 +75,37 @@ class CustomBlock {
     }
 
     /**
+     * Get the block plugged into the named input - if any
+     */
+    public function getInputBlock(inputName: String): Null<Block> {
+        var input = block.getInput(inputName);
+        if(input == null) return null;
+        return input.connection.targetBlock();
+    }
+
+    /**
+     * Create a block of the given type and attach it to the named input
+     * @return the new block
+     */
+    public function attachBlock(inputName: String, blockType: String): Block {
+        var input = block.getInput(inputName);
+        var newBlock = block.workspace.newBlock(blockType);
+        input.connection.connect(newBlock.outputConnection);
+        newBlock.initSvg();
+        newBlock.render(true);
+        return newBlock;
+    }
+
+    /**
+     * Detach the block attached to the named input - if any - and return it
+     */
+    public function detachBlock(inputName: String): Null<Block> {
+        var otherBlock = getInputBlock(inputName);
+        if(otherBlock != null) otherBlock.unplug(true, true);
+        return otherBlock;
+    }
+
+    /**
      * Get the CustomBlock associated with a Blockly block
      */
     public static function fromBlock(block: Block): Null<CustomBlock> {

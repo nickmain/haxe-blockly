@@ -11,7 +11,13 @@ typedef BlockDef = {
     tooltip: String,
     warning: Null<String>,
     help: String,
-    inputs: Array<InputDef>
+    inputs: Array<InputDef>,
+    validators: Array<Validator>
+}
+
+enum Validator {
+    Callback(fieldName: String, callback: Dynamic->Dynamic);
+    Clear(fieldName: String);
 }
 
 typedef ConnectionTypes = {
@@ -37,15 +43,17 @@ enum InputDef {
 enum FieldDef {
     TextLabel(text: String, cssClass: String);
     TextInput(name: String, text: String);
+    SpellcheckedTextInput(name: String, text: String);
     Angle(name: String, value: Int);
-    DropDown(name: String, value: String, options: Array<{value: String, text: String}>);
+    DropDown(name: String, value: Null<String>, options: Array<Array<String>>);
+    DropDownGen(name: String, value: Null<String>, generator: Void->Array<Array<String>>);
     Colour(name: String, value: String);
     CustomColours(name: String, value: String, cols: Int, colours: Array<String>);
     CheckBox(name: String, value: Bool);
     Variable(name: String, value: String);
     Image(url: String, w: Int, h: Int, alt: String);
-    Numeric(name: String, value: String, min: Dynamic, max: Dynamic, precision: Dynamic );
-    DateSelect(name: String, value: String);
+    Numeric(name: String, value: Dynamic, min: Dynamic, max: Dynamic, precision: Dynamic );
+    DateSelect(name: String, date: String);
 }
 
 enum ValueType {

@@ -39,7 +39,7 @@ extern class XMLSerializer {
      * @param workspace The workspace.
      * @param xml XML DOM.
      */
-    public static function domToWorkspace(workspace: Workspace, xml: Element): Void;
+    public static function domToWorkspace(xml: Element, workspace: Workspace): Void;
 
     /**
      * Decode an XML block tag and create a block (and possibly sub blocks) on the
@@ -48,7 +48,7 @@ extern class XMLSerializer {
      * @param xmlBlock XML block element.
      * @return The root block created.
      */
-    public static function domToBlock(workspace: Workspace, xmlBlock: Element): Block;
+    public static function domToBlock(xmlBlock: Element, workspace: Workspace): Block;
 
     /**
      * Remove any 'next' block (statements in a stack).

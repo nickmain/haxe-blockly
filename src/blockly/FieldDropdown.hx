@@ -13,6 +13,6 @@ extern class FieldDropdown extends Field {
      *     become selected in place of the newly selected option, unless the return
      *     value is null, in which case the change is aborted.
      */
-    @:overload(function(menuGenerator: Void->Array<Array<String>>, opt_changeHandler: String->String = null): FieldDropdown {})
-    public function new(menuGenerator: Array<Array<String>>, opt_changeHandler: String->String = null);
+    @:overload(function(menuGenerator: Void->Array<Array<String>>, ?opt_changeHandler: String->String = null): FieldDropdown {})
+    public function new(menuGenerator: Array<Array<String>>, ?opt_changeHandler: String->String = null);
 }

@@ -12,9 +12,4 @@ extern class FieldAngle extends FieldTextInput {
      *     the change.
      */
     public function new(text: String, opt_changeHandler: String->String = null);
-
-    /**
-     * Change handler that validates angles
-     */
-    public static var angleValidator: String->String;
 }

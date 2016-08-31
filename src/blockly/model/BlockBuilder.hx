@@ -5,6 +5,7 @@ import blockly.model.BlockDef.ConnectionTypes;
 import blockly.model.BlockDef.InputDef;
 import blockly.model.BlockDef.FieldDef;
 import blockly.model.BlockDef.FieldAlignment;
+import blockly.model.BlockDef.Validator;
 
 /** Builder of a Block from a BlockDef */
 class BlockBuilder {
@@ -37,12 +38,20 @@ class BlockBuilder {
         block.setHelpUrl(def.help);
 
         addInputs(def.inputs);
+        addValidators(def.validators);
     }
 
     /**
      * Set the connection types for the block
      */
     public function setConnections(connections: Null<ConnectionTypes>) {
+        if( connections == null ) {
+            block.setPreviousStatement(false);
+            block.setNextStatement(false);
+            block.setOutput(false);
+            return;
+        }
+
         if(connections.topType != null) block.setPreviousStatement(true, typeString(connections.topType));
         else block.setPreviousStatement(false);
 
@@ -51,6 +60,24 @@ class BlockBuilder {
 
         if(connections.outType != null) block.setOutput(true, typeString(connections.outType));
         else block.setOutput(false);
+    }
+
+    /**
+     * Add validators to fields
+     */
+    public function addValidators(validators: Array<Validator>) {
+        for(v in validators) {
+            switch(v) {
+                case Callback(fieldName, callback): {
+                    var f = block.getField(fieldName);
+                    if(f != null) f.setValidator(callback);
+                }
+                case Clear(fieldName): {
+                    var f = block.getField(fieldName);
+                    if(f != null) f.setValidator(null);
+                }
+            }
+        }
     }
 
     /**
@@ -101,7 +128,38 @@ class BlockBuilder {
         return switch(field) {
             case Image(url, w, h, alt): {name: null, field: new FieldImage(url, w, h, alt)};
             case CheckBox(name, value): {name: name, field: new FieldCheckbox(value)};
-            default: null;
+            case TextLabel(text, cssClass): {name: null, field: new FieldLabel(text, cssClass)};
+            case TextInput(name, text): {name: name, field: new FieldTextInput(text)};
+            case Numeric(name, value, min, max, precision): {name: name, field: new FieldNumber(value, min, max, precision)};
+            case Angle(name, value): {name: name, field: new FieldAngle('$value')};
+            case Colour(name, value): {name: name, field: new FieldColour(value)};
+            case Variable(name, value): {name: name, field: new FieldVariable(value)};
+            case DateSelect(name, date): {name: name, field: new FieldDate(date)};
+
+            case DropDown(name, value, options): {
+                var f = new FieldDropdown(options);
+                if(value != null) f.setValue(value);
+                {name: name, field: f};
+            }
+
+            case DropDownGen(name, value, generator): {
+                var f = new FieldDropdown(generator);
+                if(value != null) f.setValue(value);
+                {name: name, field: f};
+            }
+
+            case CustomColours(name, value, cols, colours): {
+                var f = new FieldColour(value);
+                f.setColumns(cols);
+                f.setColours(colours);
+                {name: name, field: f};
+            }
+
+            case SpellcheckedTextInput(name, text): {
+                var f = new FieldTextInput(text);
+                f.setSpellcheck(true);
+                {name: name, field: f};
+            }
         }
     }
 

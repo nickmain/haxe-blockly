@@ -6,7 +6,7 @@ import js.Browser;
  * Various Blockly setup utils
  */
 class BlocklyApp {
-    var workspace: Workspace;
+    public var workspace(default,null): Workspace;
     var divId: String;
 
     public function new() {
@@ -59,14 +59,14 @@ class BlocklyApp {
      * Load blocks from XML
      */
     public function loadWorkspace(xml:String) {
-        XMLSerializer.domToWorkspace(workspace, XMLSerializer.textToDom(xml));
+        XMLSerializer.domToWorkspace(XMLSerializer.textToDom(xml), workspace);
     }
 
     /**
      * Load a block tree from XML and return the root
      */
     public function loadBlock(xml:String): Block {
-        return XMLSerializer.domToBlock(workspace, XMLSerializer.textToDom(xml));
+        return XMLSerializer.domToBlock(XMLSerializer.textToDom(xml), workspace);
     }
 
     /**
@@ -86,7 +86,7 @@ class BlocklyApp {
     public function loadWorkspaceFromLocalStorage(key: String): Bool {
         var xml = Browser.window.localStorage.getItem(key);
         if(xml == null) return false;
-        XMLSerializer.domToWorkspace(workspace, XMLSerializer.textToDom(xml));
+        XMLSerializer.domToWorkspace(XMLSerializer.textToDom(xml), workspace);
         return true;
     }
 
