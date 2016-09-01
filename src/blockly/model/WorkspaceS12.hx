@@ -5,11 +5,11 @@ package blockly.model;
  * S12 = Serialization
  */
 
-typedef WorkspaceS12 = { blocks: Array<TopBlock> }
+typedef Workspace = { blocks: Array<TopBlock> }
 
-typedef TopBlock = { x: Int, y: Int, block: BlockS12 }
+typedef TopBlock = { x: Int, y: Int, block: BlockModel }
 
-typedef BlockS12 = {
+typedef BlockModel = {
     type: String,
     id: String,   // UUID
     disabled: Bool,
@@ -19,15 +19,22 @@ typedef BlockS12 = {
     movable: Bool,
     deletable: Bool,
     comment: Null<{ text: String, pinned: Bool, w: Int, h: Int }>,
-    next: Null<BlockS12>,
+    next: Null<BlockModel>,
     data: Null<String>,
-    inputs: Null<Array<InputS12>>,
-    fields: Null<Array<FieldS12>>
+    inputs: Null<Array<InputModel>>,
+    fields: Null<Array<FieldModel>>
 }
 
-enum InputS12 {
-    ValueInput(name: String, block: Null<BlockS12>, shadow: Null<BlockS12>);
-    Statement(name: String, block: Null<BlockS12>);
+enum InputModel {
+    ValueInput(name: String, block: Null<BlockModel>, shadow: Null<BlockModel>);
+    Statement(name: String, block: Null<BlockModel>);
 }
 
-typedef FieldS12 = { name: String, value: String }
+typedef FieldModel = { name: String, value: String }
+
+class WorkspaceS12 {
+    public static function serializeBlock(block: BlockModel): Xml {
+        //TODO
+    }
+
+}
