@@ -22,6 +22,9 @@ enum Categories {
 }
 
 class ToolboxS12 {
+
+    // TODO: deserialize ??? - maybe no use cases
+
     /**
      * Serialize a toolbox to XML
      */
