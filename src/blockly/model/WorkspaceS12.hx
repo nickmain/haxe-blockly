@@ -19,12 +19,14 @@ typedef BlockModel = {
     movable: Bool,
     inlined: Bool,
     deletable: Bool,
-    comment: Null<{ text: String, pinned: Bool, w: Int, h: Int }>,
+    comment: Null<Comment>,
     next: Null<BlockModel>,
     data: Null<String>,
     inputs: Null<Array<InputModel>>,
     fields: Null<Array<FieldModel>>
 }
+
+typedef Comment = { text: String, pinned: Bool, w: Int, h: Int }
 
 enum InputModel {
     ValueInput(name: String, block: Null<BlockModel>, shadow: Null<BlockModel>);
@@ -36,6 +38,89 @@ typedef FieldModel = { name: String, value: String }
 class WorkspaceS12 {
 
     // TODO: deserialize workspace
+
+    public static function deserializeWorkspace(xml: Xml): Workspace {
+        var blocks: Array<TopBlock> = [];
+
+        // don't actually care what the container element is
+        for(elem in xml.elements()) {
+            var block = deserializeBlock(elem);
+            var xattr = elem.get("x");
+            var x = (xattr != null) ? Std.parseInt(xattr) : 0;
+            var yattr = elem.get("y");
+            var y = (yattr != null) ? Std.parseInt(yattr) : 0;
+            blocks.push({x: x, y: y, block: block});
+        }
+
+        return { blocks: blocks };
+    }
+
+    public static function deserializeBlock(xml: Xml): BlockModel {
+        return {
+            type     : xml.get("type"),
+            id       : xml.get("id"),
+            disabled : boolAttrTrue(xml, "disabled"),
+            collapsed: boolAttrTrue(xml, "collapsed"),
+            mutation : elemNamed(xml, "mutation"),
+            editable : boolAttrTrue(xml, "editable"),
+            movable  : boolAttrTrue(xml, "movable"),
+            inlined  : boolAttrTrue(xml, "inline"),
+            deletable: boolAttrTrue(xml, "deletable"),
+            comment  : getComment(xml),
+            next     : getNext(xml),
+            data     : textNamed(xml. "data"),
+            inputs: Null<Array<InputModel>>,
+            fields: Null<Array<FieldModel>>
+        };
+    }
+
+    static function getNext(xml: Xml): Null<BlockModel> {
+        var elem = elemNamed("next");
+        if(elem == null) return null;
+
+        var block = elem.firstElement();
+        if(block == null) return null;
+
+        return deserializeBlock(block);
+    }
+
+    static function getComment(xml: Xml): Null<Comment> {
+        var elem = elemNamed("comment");
+        if(elem == null) return null;
+
+        return {
+            text  : elem.firstChild().nodeValue,
+            pinned: boolAttrTrue(elem, "pinned"),
+            w     : intAttr(elem, "w"),
+            h     : intAttr(elem, "h")
+        };
+    }
+
+    // whether bool attr exists and is true or TRUE
+    static function boolAttrTrue(xml: Xml, attr: String): Bool {
+        var value = xml.get(attr);
+        if(attr == null) return false;
+        return (attr == "true" || attr == "TRUE");
+    }
+
+    static function intAttr(xml: Xml, attr: String): Int {
+        var value = xml.get(attr);
+        if(value == null) return null;
+        var i =  Std.parseInt(value);
+        if(i == null) return 0;
+        return i;
+    }
+
+    static function elemNamed(xml: Xml, name: String): Null<Xml> {
+        for(e in xml.elementsNamed(name)) return e;
+        return null;
+    }
+
+    static function textNamed(xml: Xml, name: String): Null<String> {
+        var e = elemNamed(xml, "data");
+        if(e == null || e.firstChild() == null) return null;
+        return e.firstChild().nodeValue;
+    }
 
     /**
      * Serialize workspace to XML
