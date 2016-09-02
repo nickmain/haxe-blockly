@@ -1,5 +1,8 @@
 package blockly;
 
+import haxe.Constraints.Function;
+import blockly.events.Event.BlocklyEvent;
+
 @:native("Blockly.Workspace")
 extern class Workspace {
 
@@ -9,14 +12,14 @@ extern class Workspace {
     public static function getById(id: String): Null<Workspace>;
 
     /**
-     * Add a change callback to the workspace
+     * Add a change callback to the workspace - returns function for remove call
      */
-    public function addChangeListener(listener: Void->Void): Void;
+    public function addChangeListener(listener: BlocklyEvent->Void): Function;
 
     /**
      * Remove a change callback from the workspace
      */
-    public function removeChangeListener(listener: Void->Void): Void;
+    public function removeChangeListener(listener: Function): Void;
 
     /**
      * The workspace id

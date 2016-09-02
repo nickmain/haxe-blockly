@@ -1,5 +1,6 @@
 package app;
 
+import blockly.events.Event;
 import js.Browser;
 import js.html.Element;
 import app.blocks.KitchenSink;
@@ -30,16 +31,15 @@ class Main {
             .showTrashcan(true)
         );
 
-        application.addSelectionChangeListener(function(){ trace("Selection Changed"); });
-
         resultArea = Browser.document.getElementById("resultArea");
         application.loadWorkspaceFromLocalStorage("demo");
 
         Blockly.getMainWorkspace().addChangeListener(workspaceChanged);
     }
 
-    function workspaceChanged() {
-        trace("workspaceChanged");
+    function workspaceChanged(event: BlocklyEvent) {
+        var e: Event = event;
+        trace('workspaceChanged $e');
         application.workspaceToLocalStorage("demo");
 
         var xmlText = application.workspaceToPrettyXML();

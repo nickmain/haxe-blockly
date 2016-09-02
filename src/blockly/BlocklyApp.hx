@@ -21,20 +21,6 @@ class BlocklyApp {
     }
 
     /**
-     * Add a listener for block selection change events.
-     * Call after inject.
-     */
-    public function addSelectionChangeListener(callback: Void->Void) {
-        var blocklyDiv  = Browser.document.getElementById(divId);
-        if(blocklyDiv != null) {
-            blocklyDiv.addEventListener('blocklySelectChange', function (e) {
-                    callback();
-                },
-                false);
-        }
-    }
-
-    /**
      * Whether statement blocks with no top input show an "event handler" hat
      */
     public function showStartBlockHats(showHat: Bool) {
