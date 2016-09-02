@@ -5,6 +5,7 @@ package blockly.model;
  * S12 = Serialization
  */
 
+import Xml.XmlType;
 typedef Workspace = { blocks: Array<TopBlock> }
 
 typedef TopBlock = { x: Int, y: Int, block: BlockModel }
@@ -68,14 +69,30 @@ class WorkspaceS12 {
             deletable: boolAttrTrue(xml, "deletable"),
             comment  : getComment(xml),
             next     : getNext(xml),
-            data     : textNamed(xml. "data"),
-            inputs: Null<Array<InputModel>>,
-            fields: Null<Array<FieldModel>>
+            data     : textNamed(xml, "data"),
+            inputs   : null, // TODO Null<Array<InputModel>>,
+            fields   : readFields(xml)
         };
     }
 
+    static function readFields(xml: Xml): Array<FieldModel> {
+        var fields: Array<FieldModel> = [];
+
+        for(f in xml.elementsNamed("field")) {
+            fields.push({name: f.get("name"), value: elemText(f)});
+        }
+
+        return fields.length > 0 ? fields : null;
+    }
+
+    static function elemText(xml: Xml): String {
+        var child = xml.firstChild();
+        if(child != null) return child.toString();
+        return "";
+    }
+
     static function getNext(xml: Xml): Null<BlockModel> {
-        var elem = elemNamed("next");
+        var elem = elemNamed(xml, "next");
         if(elem == null) return null;
 
         var block = elem.firstElement();
@@ -85,11 +102,11 @@ class WorkspaceS12 {
     }
 
     static function getComment(xml: Xml): Null<Comment> {
-        var elem = elemNamed("comment");
+        var elem = elemNamed(xml, "comment");
         if(elem == null) return null;
 
         return {
-            text  : elem.firstChild().nodeValue,
+            text  : elemText(elem),
             pinned: boolAttrTrue(elem, "pinned"),
             w     : intAttr(elem, "w"),
             h     : intAttr(elem, "h")
@@ -99,8 +116,8 @@ class WorkspaceS12 {
     // whether bool attr exists and is true or TRUE
     static function boolAttrTrue(xml: Xml, attr: String): Bool {
         var value = xml.get(attr);
-        if(attr == null) return false;
-        return (attr == "true" || attr == "TRUE");
+        if(value == null) return false;
+        return (value == "true" || value == "TRUE");
     }
 
     static function intAttr(xml: Xml, attr: String): Int {
@@ -117,9 +134,9 @@ class WorkspaceS12 {
     }
 
     static function textNamed(xml: Xml, name: String): Null<String> {
-        var e = elemNamed(xml, "data");
-        if(e == null || e.firstChild() == null) return null;
-        return e.firstChild().nodeValue;
+        var e = elemNamed(xml, name);
+        if(e == null) return null;
+        return elemText(e);
     }
 
     /**
@@ -129,7 +146,7 @@ class WorkspaceS12 {
         var root = Xml.createElement("xml");
 
         for(b in workspace.blocks) {
-            var block = serializeBlock(block.block);
+            var block = serializeBlock(b.block);
             block.set("x", '${b.x}');
             block.set("y", '${b.y}');
             root.addChild(block);

@@ -1,5 +1,6 @@
 package app;
 
+import blockly.model.WorkspaceS12;
 import blockly.events.Event;
 import js.Browser;
 import js.html.Element;
@@ -43,7 +44,10 @@ class Main {
         application.workspaceToLocalStorage("demo");
 
         var xmlText = application.workspaceToPrettyXML();
-        resultArea.innerText = xmlText;
+
+        var ws = WorkspaceS12.deserializeWorkspace(Xml.parse(xmlText).firstChild());
+
+        resultArea.innerText = '$ws';
     }
 
     static var mainApp: Main;
