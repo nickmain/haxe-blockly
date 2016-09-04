@@ -1,5 +1,6 @@
 package blockly;
 
+import blockly.events.Event.BlocklyEvent;
 import js.html.Element;
 
 /**
@@ -25,8 +26,7 @@ class CustomBlock {
      * Called when the block is being deserialized from XML to
      * allow custom mutations to be read
      */
-    public function domToMutation(xmlElement: Element) {
-    }
+    public function domToMutation(xmlElement: Element) {}
 
     /**
      * Called when the block is being serialized to XML to
@@ -38,6 +38,7 @@ class CustomBlock {
 
     /**
      * Populate the mutator's dialog with this block's components.
+     * Called when the mutator pops up
      * @param workspace Mutator's workspace.
      * @return Root block in mutator.
      */
@@ -47,16 +48,25 @@ class CustomBlock {
 
     /**
      * Reconfigure this block based on the mutator dialog's components.
+     * Called whenever the blocks in the mutator popup's workspace change.
      * @param containerBlock Root block in mutator.
      */
-    public function compose(containerBlock: Block) {
-    }
+    public function compose(containerBlock: Block) {}
+
+    /**
+     * Called by the mutator whenever a main workspace change occurs
+     * in order to allow the block being mutated to save references to
+     * connections related to the mutation. This allows connected blocks
+     * to remain associated with inputs that are being moved within the
+     * mutator.
+     * @param containerBlock Root block in mutator.
+     */
+    public function saveConnections(containerBlock: Block) {}
 
     /**
      * Called on each block when the workspace has changed.
      */
-    public function onChange(event: Dynamic) {
-    }
+    public function onChange(event: BlocklyEvent) {}
 
     /**
      * Get the previous statement block

@@ -105,6 +105,10 @@ class BlocklyApp {
                 var haxeBlock: CustomBlock = untyped __js__("this.haxeBlock");
                 haxeBlock.compose(containerBlock);
             },
+            saveConnections: function(containerBlock) {
+                var haxeBlock: CustomBlock = untyped __js__("this.haxeBlock");
+                haxeBlock.saveConnections(containerBlock);
+            },
             onchange: function(event) {
                 var haxeBlock: CustomBlock = untyped __js__("this.haxeBlock");
                 haxeBlock.onChange(event);
