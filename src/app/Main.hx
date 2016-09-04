@@ -1,5 +1,6 @@
 package app;
 
+import blockly.XMLSerializer;
 import blockly.model.WorkspaceS12;
 import blockly.events.Event;
 import js.Browser;
@@ -26,7 +27,8 @@ class Main {
 
         application.inject("blocklyArea", new BlocklyConfig()
             .setMediaPath("media/")
-            .useToolboxId("toolbox")
+//            .useToolboxId("toolbox")
+            .setToolbox(DemoToolbox.toString())
             .setGrid(new Grid())
             .setZoom(new Zoom())
             .showTrashcan(true)
@@ -43,11 +45,15 @@ class Main {
         trace('workspaceChanged $e');
         application.workspaceToLocalStorage("demo");
 
+        // Round-trip the Workspace back to XML to make sure it looks plausible
         var xmlText = application.workspaceToPrettyXML();
 
         var ws = WorkspaceS12.deserializeWorkspace(Xml.parse(xmlText).firstChild());
+        var wsText = WorkspaceS12.serializeWorkspace(ws).toString();
 
-        resultArea.innerText = '$ws';
+        var pretty = XMLSerializer.domToPrettyText(XMLSerializer.textToDom(wsText));
+
+        resultArea.innerText = pretty;
     }
 
     static var mainApp: Main;

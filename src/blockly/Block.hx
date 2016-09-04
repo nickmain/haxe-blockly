@@ -43,6 +43,12 @@ extern class Block {
      */
     public var workspace: Workspace;
 
+    /** Whether this block is in a flyout */
+    public var isInFlyout (default,null): Bool;
+
+    /** Whether this block is in a mutator */
+    public var isInMutator (default,null): Bool;
+
     /**
      * Set the block colour as "#rrggbb" string or 0-360 hue
      */

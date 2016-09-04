@@ -10,21 +10,26 @@ typedef Workspace = { blocks: Array<TopBlock> }
 
 typedef TopBlock = { x: Int, y: Int, block: BlockModel }
 
-typedef BlockModel = {
-    type: String,
-    id: String,   // UUID
-    disabled: Bool,
-    collapsed: Bool,
-    mutation: Null<Xml>,  //node must be named "mutation"
-    editable: Bool,
-    movable: Bool,
-    inlined: Bool,
-    deletable: Bool,
-    comment: Null<Comment>,
-    next: Null<BlockModel>,
-    data: Null<String>,
-    inputs: Null<Array<InputModel>>,
-    fields: Null<Array<FieldModel>>
+enum BlockModel {
+    Block(
+        type: String,
+        id: Null<String>,   // UUID
+        disabled: Bool,
+        collapsed: Bool,
+        editable: Bool,
+        movable: Bool,
+        inlined: Bool,
+        deletable: Bool,
+        mutation: Null<Xml>,  //node must be named "mutation"
+        comment: Null<Comment>,
+        next: Null<BlockModel>,
+        data: Null<String>,
+        inputs: Null<Array<InputModel>>,
+        fields: Null<Array<FieldModel>>
+    );
+
+    BlockType(type: String);
+    BlockMin(type: String, inputs: Null<Array<InputModel>>, fields: Null<Array<FieldModel>>);
 }
 
 typedef Comment = { text: String, pinned: Bool, w: Int, h: Int }
@@ -37,8 +42,6 @@ enum InputModel {
 typedef FieldModel = { name: String, value: String }
 
 class WorkspaceS12 {
-
-    // TODO: deserialize workspace
 
     public static function deserializeWorkspace(xml: Xml): Workspace {
         var blocks: Array<TopBlock> = [];
@@ -57,22 +60,45 @@ class WorkspaceS12 {
     }
 
     public static function deserializeBlock(xml: Xml): BlockModel {
-        return {
-            type     : xml.get("type"),
-            id       : xml.get("id"),
-            disabled : boolAttrTrue(xml, "disabled"),
-            collapsed: boolAttrTrue(xml, "collapsed"),
-            mutation : elemNamed(xml, "mutation"),
-            editable : boolAttrTrue(xml, "editable"),
-            movable  : boolAttrTrue(xml, "movable"),
-            inlined  : boolAttrTrue(xml, "inline"),
-            deletable: boolAttrTrue(xml, "deletable"),
-            comment  : getComment(xml),
-            next     : getNext(xml),
-            data     : textNamed(xml, "data"),
-            inputs   : null, // TODO Null<Array<InputModel>>,
-            fields   : readFields(xml)
-        };
+        return Block(
+            /* type      */ xml.get("type"),
+            /* id        */ xml.get("id"),
+            /* disabled  */ boolAttr(xml, false, "disabled"),
+            /* collapsed */ boolAttr(xml, false, "collapsed"),
+            /* editable  */ boolAttr(xml, true,  "editable"),
+            /* movable   */ boolAttr(xml, true,  "movable"),
+            /* inlined   */ boolAttr(xml, false, "inline"),
+            /* deletable */ boolAttr(xml, true,  "deletable"),
+            /* mutation  */ elemNamed(xml, "mutation"),
+            /* comment   */ getComment(xml),
+            /* next      */ getNext(xml),
+            /* data      */ textNamed(xml, "data"),
+            /* inputs    */ readInputs(xml),
+            /* fields    */ readFields(xml)
+        );
+    }
+
+    static function readInputs(xml: Xml): Array<InputModel> {
+        var inputs: Array<InputModel> = [];
+
+        for(input in xml.elementsNamed("value")) {
+            var shadowElem = elemNamed(input, "shadow");
+            var shadow = (shadowElem != null) ? deserializeBlock(shadowElem) : null;
+
+            var blockElem = elemNamed(input, "block");
+            var block = (blockElem != null) ? deserializeBlock(blockElem) : null;
+
+            inputs.push(ValueInput(input.get("name"), block, shadow));
+        }
+
+        for(input in xml.elementsNamed("statement")) {
+            var blockElem = input.firstElement();
+            var block = (blockElem != null) ? deserializeBlock(blockElem) : null;
+
+            inputs.push(Statement(input.get("name"), block));
+        }
+
+        return inputs;
     }
 
     static function readFields(xml: Xml): Array<FieldModel> {
@@ -107,16 +133,16 @@ class WorkspaceS12 {
 
         return {
             text  : elemText(elem),
-            pinned: boolAttrTrue(elem, "pinned"),
+            pinned: boolAttr(elem, false, "pinned"),
             w     : intAttr(elem, "w"),
             h     : intAttr(elem, "h")
         };
     }
 
-    // whether bool attr exists and is true or TRUE
-    static function boolAttrTrue(xml: Xml, attr: String): Bool {
+    // get bool attr with default if missing
+    static function boolAttr(xml: Xml, defVal: Bool, attr: String): Bool {
         var value = xml.get(attr);
-        if(value == null) return false;
+        if(value == null) return defVal;
         return (value == "true" || value == "TRUE");
     }
 
@@ -159,66 +185,83 @@ class WorkspaceS12 {
      * Serialize a block to XML
      */
     public static function serializeBlock(block: BlockModel, isShadow: Bool = false): Xml {
-        var root = Xml.createElement(isShadow ? "shadow": "block");
-        root.set("type", block.type);
-        root.set("id", block.id);
 
-        if(block.disabled ) root.set("disabled" , "true");
-        if(block.collapsed) root.set("collapsed", "true");
-        if(block.editable ) root.set("editable" , "true");
-        if(block.movable  ) root.set("movable"  , "true");
-        if(block.deletable) root.set("deletable", "true");
-        if(block.inlined  ) root.set("inline"   , "true");
+        switch(block) {
+            case BlockType(type): return serializeBlock(
+                Block(type, null, false, false, true, true, false, true, null, null, null, null, null, null),
+                isShadow
+            );
 
-        if(block.mutation != null) root.addChild(block.mutation);
+            case BlockMin(type, inputs, fields): return serializeBlock(
+                Block(type, null, false, false, true, true, false, true, null, null, null, null, inputs, fields),
+                isShadow
+            );
 
-        if(block.fields != null) for(f in block.fields) {
-            var field = Xml.createElement("field");
-            field.set("name", f.name);
-            field.addChild(Xml.createPCData(f.value));
-            root.addChild(field);
-        }
+            case Block(type, id,
+                       disabled, collapsed, editable, movable, inlined, deletable,
+                       mutation, comment, next, data, inputs, fields): {
+                var root = Xml.createElement(isShadow ? "shadow": "block");
+                root.set("type", type);
 
-        if(block.comment != null) {
-            var comment = Xml.createElement("comment");
-            comment.set("pinned", block.comment.pinned ? "true" : "false");
-            comment.set("w", '${block.comment.w}');
-            comment.set("h", '${block.comment.h}');
-            comment.addChild(Xml.createPCData(block.comment.text));
-            root.addChild(comment);
-        }
+                if(id != null) root.set("id", id);
 
-        if(block.data != null) {
-            var data = Xml.createElement("data");
-            data.addChild(Xml.createPCData(block.data));
-            root.addChild(data);
-        }
+                if(disabled  ) root.set("disabled" , "true");
+                if(collapsed ) root.set("collapsed", "true");
+                if(!editable ) root.set("editable" , "false");
+                if(!movable  ) root.set("movable"  , "false");
+                if(!deletable) root.set("deletable", "false");
+                if(inlined   ) root.set("inline"   , "true");
 
-        if(block.inputs != null) for(i in block.inputs) {
-            switch(i) {
-                case ValueInput(name, blk, shadow): {
-                    var value = Xml.createElement("value");
-                    value.set("name", name);
-                    if(shadow != null) value.addChild(serializeBlock(shadow, true));
-                    if(blk != null) value.addChild(serializeBlock(blk, false));
-                    root.addChild(value);
+                if(mutation != null) root.addChild(mutation);
+
+                if(fields != null) for(f in fields) {
+                    var field = Xml.createElement("field");
+                    field.set("name", f.name);
+                    field.addChild(Xml.createPCData(f.value));
+                    root.addChild(field);
                 }
-                case Statement(name, blk): {
-                    var statement = Xml.createElement("statement");
-                    statement.set("name", name);
-                    if(blk != null) statement.addChild(serializeBlock(blk, false));
-                    root.addChild(statement);
+
+                if(comment != null) {
+                    var comElem = Xml.createElement("comment");
+                    comElem.set("pinned", comment.pinned ? "true" : "false");
+                    comElem.set("w", '${comment.w}');
+                    comElem.set("h", '${comment.h}');
+                    comElem.addChild(Xml.createPCData(comment.text));
+                    root.addChild(comElem);
                 }
+
+                if(data != null) {
+                    var dataElem = Xml.createElement("data");
+                    dataElem.addChild(Xml.createPCData(data));
+                    root.addChild(dataElem);
+                }
+
+                if(inputs != null) for(i in inputs) {
+                    switch(i) {
+                        case ValueInput(name, blk, shadow): {
+                            var value = Xml.createElement("value");
+                            value.set("name", name);
+                            if(shadow != null) value.addChild(serializeBlock(shadow, true));
+                            if(blk != null) value.addChild(serializeBlock(blk, false));
+                            root.addChild(value);
+                        }
+                        case Statement(name, blk): {
+                            var statement = Xml.createElement("statement");
+                            statement.set("name", name);
+                            if(blk != null) statement.addChild(serializeBlock(blk, false));
+                            root.addChild(statement);
+                        }
+                    }
+                }
+
+                if(next != null) {
+                    var nextElem = Xml.createElement("next");
+                    nextElem.addChild(serializeBlock(next));
+                    root.addChild(nextElem);
+                }
+
+                return root;
             }
         }
-
-        if(block.next != null) {
-            var next = Xml.createElement("next");
-            next.addChild(serializeBlock(block.next));
-            root.addChild(next);
-        }
-
-        return root;
     }
-
 }

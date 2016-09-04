@@ -48,7 +48,6 @@ class KitchenSink extends CustomBlock {
 
         block.setCommentText("Everything but the kitchen sink.");
         block.data = "This is some metadata";
-        block.setDeletable(true);
         block.setMutator(new Mutator(['controls_if_elseif', 'controls_if_else']));
     }
 
@@ -133,4 +132,8 @@ class KitchenSink extends CustomBlock {
         return containerBlock;
     }
 
+}
+
+/** Container block for mutator */
+class KitchenSinkMutator extends CustomBlock {
 }

@@ -55,6 +55,7 @@ class ToolboxS12 {
             case Separator: Xml.createElement("sep");
             case Category(name, colour, subcategories, blocks): {
                 var cat = Xml.createElement("category");
+                cat.set("name", name);
                 if(colour != null) cat.set("colour", colour);
                 for(block in blocks) cat.addChild(serializeBlocks(block));
                 for(subcat in subcategories) cat.addChild(serializeCategories(subcat));

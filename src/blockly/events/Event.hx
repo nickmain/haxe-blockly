@@ -90,7 +90,7 @@ extern class Move extends Abstract {
 /** UI event */
 @:native("Blockly.Events.UI")
 extern class UI extends Abstract {
-    var element  (default,null): String; // name of element that changed: 'selected', 'comment', 'mutator', etc.
+    var element  (default,null): String; // name of element that changed: 'selected', 'comment', 'mutatorOpen', etc.
     var oldValue (default,null): String; // previous value of element
     var newValue (default,null): String; // new value of element
 }
@@ -99,7 +99,7 @@ extern class UI extends Abstract {
 class UIElement {
     public static var Selected (default,null) = "selected";
     public static var Comment (default,null) = "comment";
-    public static var Mutator (default,null) = "mutator";
+    public static var MutatorOpen (default,null) = "mutatorOpen";
 
     // TODO: others exist but are not documented
 }
