@@ -23,7 +23,7 @@ class Main {
 
         application.registerBlock( FooBarBlock );
         application.registerBlock( DemoQuestions );
-        application.registerBlock( KitchenSink );
+        KitchenSink.register(application);
 
         application.inject("blocklyArea", new BlocklyConfig()
             .setMediaPath("media/")

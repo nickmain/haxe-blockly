@@ -17,6 +17,12 @@ class CustomBlock {
         this.application = application;
     }
 
+    /** Get the Haxe CustomBlock associated with a Blockly block */
+    public static function customFromBlock(block: Block): CustomBlock {
+        var haxeBlock: CustomBlock = untyped __js__("this.haxeBlock");
+        return haxeBlock;
+    }
+
     /**
      * Called when the workspace is being validated
      */

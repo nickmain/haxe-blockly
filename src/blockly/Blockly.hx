@@ -25,6 +25,9 @@ extern class Blockly {
      */
     public static var selected: Null<Block>;
 
+    /** Generate a unique id */
+    public static function genUid(): String;
+
     public static var ALIGN_LEFT: Int;
     public static var ALIGN_CENTRE: Int;
     public static var ALIGN_RIGHT: Int;

@@ -1,5 +1,9 @@
 package app.blocks;
 
+import blockly.Connection;
+import blockly.Blockly;
+import haxe.Unserializer;
+import haxe.Serializer;
 import blockly.model.BlockBuilder;
 import js.html.XMLHttpRequest;
 import js.html.Element;
@@ -11,9 +15,18 @@ import blockly.CustomBlock;
 
 class KitchenSink extends CustomBlock {
 
+    static var DEFAULT_COLOR = "#009900";
     var hasPrev: Bool = true;
     var hasOut: Bool = true;
+    var extraInputs: Array<String> = [];
     var builder: BlockBuilder;
+
+    // register this block and its mutator blocks
+    public static function register(app: BlocklyApp) {
+        app.registerBlock( KitchenSink );
+        app.registerBlock( KitchenSinkMutator );
+        app.registerBlock( KitchenSinkMutatorInput );
+    }
 
     public function new(block: Block, application: BlocklyApp) {
         super(block, application);
@@ -22,7 +35,7 @@ class KitchenSink extends CustomBlock {
         builder.build({
             connections: { topType: AnyType, bottomType: AnyType, outType: BoolType },
             inlining: Automatic,
-            colour  : RGBColour("#009900"),
+            colour  : RGBColour(DEFAULT_COLOR),
             tooltip : Fixed("All fields except the kitchen sink"),
             warning : "There are things yet to do !",
             help    : "http://blog.nickmain.com",
@@ -48,7 +61,7 @@ class KitchenSink extends CustomBlock {
 
         block.setCommentText("Everything but the kitchen sink.");
         block.data = "This is some metadata";
-        block.setMutator(new Mutator(['controls_if_elseif', 'controls_if_else']));
+        block.setMutator(new Mutator(['app.blocks.KitchenSinkMutatorInput']));
     }
 
     // handler for the checkbox value input
@@ -116,6 +129,25 @@ class KitchenSink extends CustomBlock {
         hasPrev = e.getAttribute("has_prev") == "true";
         hasOut  = e.getAttribute("has_out") == "true";
 
+        var color = e.getAttribute("color");
+        if(color != null) block.setColour(color);
+
+        var extras = e.getAttribute("extras");
+        if(extras != null) {
+            var des = new Unserializer(extras);
+            extraInputs = des.unserialize();
+
+            var inputNum = 0;
+            for(exin in extraInputs) {
+                var inp = block.appendValueInput('extra${inputNum++}');
+                inp.setAlign(Blockly.ALIGN_RIGHT);
+                inp.appendField(exin);
+            }
+        }
+        else {
+            extraInputs = [];
+        }
+
         builder.setConnections({ topType: hasPrev ? AnyType : null, bottomType: AnyType, outType: hasOut ? BoolType : null });
     }
 
@@ -123,17 +155,128 @@ class KitchenSink extends CustomBlock {
         var container = js.Browser.document.createElement('mutation');
         container.setAttribute("has_prev", ""+hasPrev);
         container.setAttribute("has_out", ""+hasOut);
+
+        if( block.getColour() != DEFAULT_COLOR ) container.setAttribute("color", block.getColour());
+
+        // serialize the extra input labels
+        if( extraInputs.length > 0 ) {
+            var serializer = new Serializer();
+            serializer.serialize(extraInputs);
+            container.setAttribute("extras", serializer.toString() );
+        }
+
         return container;
     }
 
     override public function decompose(workspace: Workspace): Block {
-        var containerBlock = workspace.newBlock("app.blocks.FooBarBlock");
+        var containerBlock = workspace.newBlock("app.blocks.KitchenSinkMutator");
+        containerBlock.setFieldValue(block.getColour(), "color1");
         containerBlock.initSvg();
+
+        // create blocks to represent the extra inputs
+        var lastBlock = containerBlock.nextConnection;
+        for(exin in extraInputs) {
+            var extraInput = workspace.newBlock("app.blocks.KitchenSinkMutatorInput");
+            extraInput.setFieldValue(exin, "label");
+            extraInput.initSvg();
+            lastBlock.connect(extraInput.previousConnection);
+            lastBlock = extraInput.nextConnection;
+        }
+
         return containerBlock;
     }
 
+    override public function compose(container: Block) {
+        var color = container.getFieldValue("color1");
+        if( color != null && color != block.getColour()) {
+            block.setColour(color);
+        }
+
+        // regenerate the extra inputs
+        extraInputs = [];
+        var inputNum = 0;
+        while(true) {
+            var name = 'extra${inputNum++}';
+            var anInput = block.getInput(name);
+            if(anInput == null) break;
+
+            block.removeInput(name);
+        }
+
+        inputNum = 0;
+        var nextBlock = container.nextConnection.targetBlock();
+        while(nextBlock != null) {
+            var label = nextBlock.getFieldValue("label");
+            extraInputs.push(label);
+
+            var name = 'extra${inputNum++}';
+            var inp = block.appendValueInput(name);
+            inp.setAlign(Blockly.ALIGN_RIGHT);
+            inp.appendField(label);
+
+            // reconnect existing target block if any
+            var ksim: KitchenSinkMutatorInput = cast nextBlock;
+            if(ksim.targetConnection != null) {
+                Mutator.reconnect(ksim.targetConnection, this.block, name);
+            }
+
+            nextBlock = nextBlock.nextConnection.targetBlock();
+        }
+    }
+
+    override public function saveConnections(containerBlock: Block) {
+
+        // loop over the mutator blocks and grab the associated target connection in the main workspace
+        var inputNum = 0;
+        var nextBlock = containerBlock.nextConnection.targetBlock();
+        while(nextBlock != null) {
+            var inp = block.getInput('extra${inputNum++}');
+            if(inp == null) break;
+
+            var ksim: KitchenSinkMutatorInput = cast nextBlock;
+            ksim.targetConnection = inp.connection.targetConnection; // save the connection for use in compose
+            nextBlock = nextBlock.nextConnection.targetBlock();
+        }
+    }
 }
 
 /** Container block for mutator */
 class KitchenSinkMutator extends CustomBlock {
+    public function new(block: Block, application: BlocklyApp) {
+        super(block, application);
+        new BlockBuilder(block).build({
+            connections: { topType: null, bottomType: AnyType, outType: null },
+            inlining: Automatic,
+            colour  : RGBColour("#999900"),
+            tooltip : Fixed("Customize the KitchenSink block"),
+            warning : null,
+            help    : "http://blog.nickmain.com",
+            inputs  : [
+                LabelledField("Kitchen Sink", Right, Colour("color1", "#ffff00"))
+            ],
+            validators: []
+        });
+    }
+}
+
+/** Mutator block for adding extra inputs */
+class KitchenSinkMutatorInput extends CustomBlock {
+
+    public var targetConnection: Connection; // connected target in main workspace
+
+    public function new(block: Block, application: BlocklyApp) {
+        super(block, application);
+        new BlockBuilder(block).build({
+            connections: { topType: AnyType, bottomType: AnyType, outType: null },
+            inlining: Automatic,
+            colour  : RGBColour("#009999"),
+            tooltip : Fixed("Add an input to the Kitchen Sink"),
+            warning : null,
+            help    : "http://blog.nickmain.com",
+            inputs  : [
+                LabelledField("Input", Left, TextInput("label", "LABEL"))
+            ],
+            validators: []
+        });
+    }
 }

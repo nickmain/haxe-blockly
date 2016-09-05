@@ -5,7 +5,14 @@ import blockly.model.ToolboxS12.Toolbox;
 
 class DemoToolbox {
     static var toolbox: Toolbox = TreeToolbox([
-        Category("Logic", "210", [], [
+        Category("Logic", "210", [
+            Category("Baz Bat", "#ffff00", [], [
+                Block(BlockType("controls_if")),
+                Block(BlockType("controls_repeat_ext")),
+                Block(BlockType("math_number")),
+                Block(BlockType("math_arithmetic"))
+            ])
+        ], [
             Block(BlockType("controls_if")),
             Block(BlockType("logic_compare")),
             Block(BlockType("logic_operation")),
@@ -16,14 +23,7 @@ class DemoToolbox {
             Block(BlockType("logic_ternary"))
         ]),
         Separator,
-        Category("Foo Bar", "140", [
-            Category("Baz Bat", "#ffff00", [], [
-                Block(BlockType("controls_if")),
-                Block(BlockType("controls_repeat_ext")),
-                Block(BlockType("math_number")),
-                Block(BlockType("math_arithmetic"))
-            ])
-        ], [
+        Category("Foo Bar", "140", [], [
             Block(BlockMin("app.blocks.FooBarBlock", [
                 ValueInput("inp1", null, BlockType("app.blocks.DemoQuestions"))], null)),
             Block(BlockType("app.blocks.DemoQuestions")),

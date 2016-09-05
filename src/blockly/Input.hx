@@ -10,7 +10,7 @@ extern class Input {
      */
     @:overload(function(label: String, name: String = null): Input {})
     @:overload(function(field: Field, name: String = null): Input {})
-    public function appendField(label: String, name: String = null): Input;
+    public function appendField(label: String, ?name: String = null): Input;
 
     /**
      * Remove the field with the given name.
@@ -36,7 +36,7 @@ extern class Input {
      */
     @:overload(function(check: String): Input {})
     @:overload(function(check: Array<String>): Input {})
-    public function setCheck(check: String = null): Input;
+    public function setCheck(?check: String = null): Input;
 
     /**
      * Set the alignment of the fields in this input.
@@ -49,4 +49,9 @@ extern class Input {
      * The connection object for this input
      */
     public var connection: Connection;
+
+    /**
+     * The read-only list of fields in the input row
+     */
+    public var fieldRow(default,null): Array<Field>;
 }

@@ -27,5 +27,5 @@ extern class Mutator {
      * @param {string} inputName Name of input on parent block.
      * @return {boolean} True iff a reconnection was made, false otherwise.
      */
-    public function reconnect(connectionChild: Connection, block: Block, inputName: String): Bool;
+    public static function reconnect(connectionChild: Connection, block: Block, inputName: String): Bool;
 }

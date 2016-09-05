@@ -1,5 +1,6 @@
 package blockly;
 
+import haxe.extern.EitherType;
 @:native("Blockly.Block")
 extern class Block {
 
@@ -52,9 +53,7 @@ extern class Block {
     /**
      * Set the block colour as "#rrggbb" string or 0-360 hue
      */
-    @:overload(function(hue: Int): Void {})
-    @:overload(function(rgb: String): Void {})
-    public function setColour(rgb: String): Void;
+    public function setColour(rgb: EitherType<Int, String>): Void;
 
     /**
      * Get the block colour as "#rrggbb"
