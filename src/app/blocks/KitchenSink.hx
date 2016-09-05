@@ -247,7 +247,7 @@ class KitchenSinkMutator extends CustomBlock {
         new BlockBuilder(block).build({
             connections: { topType: null, bottomType: AnyType, outType: null },
             inlining: Automatic,
-            colour  : RGBColour("#999900"),
+            colour  : RGBColour("#999999"),
             tooltip : Fixed("Customize the KitchenSink block"),
             warning : null,
             help    : "http://blog.nickmain.com",
@@ -269,7 +269,7 @@ class KitchenSinkMutatorInput extends CustomBlock {
         new BlockBuilder(block).build({
             connections: { topType: AnyType, bottomType: AnyType, outType: null },
             inlining: Automatic,
-            colour  : RGBColour("#009999"),
+            colour  : RGBColour("#b0b0b0"),
             tooltip : Fixed("Add an input to the Kitchen Sink"),
             warning : null,
             help    : "http://blog.nickmain.com",

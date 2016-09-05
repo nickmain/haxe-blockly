@@ -812,7 +812,7 @@ app_blocks_KitchenSink.prototype = $extend(blockly_CustomBlock.prototype,{
 });
 var app_blocks_KitchenSinkMutator = function(block,application) {
 	blockly_CustomBlock.call(this,block,application);
-	new blockly_model_BlockBuilder(block).build({ connections : { topType : null, bottomType : blockly_model_ValueType.AnyType, outType : null}, inlining : blockly_model_Inlining.Automatic, colour : blockly_model_BlockColour.RGBColour("#999900"), tooltip : blockly_model_Tooltip.Fixed("Customize the KitchenSink block"), warning : null, help : "http://blog.nickmain.com", inputs : [blockly_model_InputDef.LabelledField("Kitchen Sink",blockly_model_FieldAlignment.Right,blockly_model_FieldDef.Colour("color1","#ffff00"))], validators : []});
+	new blockly_model_BlockBuilder(block).build({ connections : { topType : null, bottomType : blockly_model_ValueType.AnyType, outType : null}, inlining : blockly_model_Inlining.Automatic, colour : blockly_model_BlockColour.RGBColour("#999999"), tooltip : blockly_model_Tooltip.Fixed("Customize the KitchenSink block"), warning : null, help : "http://blog.nickmain.com", inputs : [blockly_model_InputDef.LabelledField("Kitchen Sink",blockly_model_FieldAlignment.Right,blockly_model_FieldDef.Colour("color1","#ffff00"))], validators : []});
 };
 $hxClasses["app.blocks.KitchenSinkMutator"] = app_blocks_KitchenSinkMutator;
 app_blocks_KitchenSinkMutator.__name__ = ["app","blocks","KitchenSinkMutator"];
@@ -822,7 +822,7 @@ app_blocks_KitchenSinkMutator.prototype = $extend(blockly_CustomBlock.prototype,
 });
 var app_blocks_KitchenSinkMutatorInput = function(block,application) {
 	blockly_CustomBlock.call(this,block,application);
-	new blockly_model_BlockBuilder(block).build({ connections : { topType : blockly_model_ValueType.AnyType, bottomType : blockly_model_ValueType.AnyType, outType : null}, inlining : blockly_model_Inlining.Automatic, colour : blockly_model_BlockColour.RGBColour("#009999"), tooltip : blockly_model_Tooltip.Fixed("Add an input to the Kitchen Sink"), warning : null, help : "http://blog.nickmain.com", inputs : [blockly_model_InputDef.LabelledField("Input",blockly_model_FieldAlignment.Left,blockly_model_FieldDef.TextInput("label","LABEL"))], validators : []});
+	new blockly_model_BlockBuilder(block).build({ connections : { topType : blockly_model_ValueType.AnyType, bottomType : blockly_model_ValueType.AnyType, outType : null}, inlining : blockly_model_Inlining.Automatic, colour : blockly_model_BlockColour.RGBColour("#b0b0b0"), tooltip : blockly_model_Tooltip.Fixed("Add an input to the Kitchen Sink"), warning : null, help : "http://blog.nickmain.com", inputs : [blockly_model_InputDef.LabelledField("Input",blockly_model_FieldAlignment.Left,blockly_model_FieldDef.TextInput("label","LABEL"))], validators : []});
 };
 $hxClasses["app.blocks.KitchenSinkMutatorInput"] = app_blocks_KitchenSinkMutatorInput;
 app_blocks_KitchenSinkMutatorInput.__name__ = ["app","blocks","KitchenSinkMutatorInput"];
