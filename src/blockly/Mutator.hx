@@ -21,7 +21,7 @@ extern class Mutator {
     public function dispose(): Void;
 
     /**
-     * Reconnect an block to a mutated input.
+     * Reconnect a block to a mutated input.
      * @param {Blockly.Connection} connectionChild Connection on child block.
      * @param {!Blockly.Block} block Parent block.
      * @param {string} inputName Name of input on parent block.
