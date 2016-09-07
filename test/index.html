@@ -13,6 +13,7 @@
   <link rel="stylesheet" type="text/css" href="jquery/jqx.base.css">
   <link rel="stylesheet" type="text/css" href="jquery/jqx.energyblue.css">
 
+  <link rel="stylesheet" type="text/css" href="style.css">
   <style>
     html, body {
       height: 100%;
@@ -39,15 +40,15 @@
     }
   </style>
 
-  <script type="text/javascript">//<![CDATA[
+  <script type="text/javascript">
 $(window).load(function(){
   $('#mainSplitter').jqxSplitter({
       width: '100%',
       height: '100%',
       theme: 'energyblue',
       panels: [{
-          size: '50%',
-          min: '25%'
+          size: '70%',
+          min: '50%'
       }]
   });
 
@@ -59,23 +60,40 @@ $(window).load(function(){
     </script>
 </head>
 <body>
+<table>
+  <tr style="height: 20px">
+    <td style="width: 50%;">
+      <p style="height: 20px; margin: 0px">Haxe Blockly Testbed</p>
+    </td>
+    <td class="tabmax">
+      <button id="trashButton" class="notext" title="...">
+        <img src='media/1x1.gif' class="trash icon21">
+      </button>
+      <button id="linkButton" class="notext" title="...">
+        <img src='media/1x1.gif' class="link icon21">
+      </button>
+      <button id="runButton" class="notext primary" title="...">
+        <img src='media/1x1.gif' class="run icon21">
+      </button>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <div id="jqxWidget" style="width: 100%; height: 100%">
+        <div id="container" style="float: left; width: 100%; height: 100%;">
+          <div id="mainSplitter" class="jqx-reset jqx-reset-energyblue jqx-splitter jqx-splitter-energyblue jqx-widget jqx-widget-energyblue jqx-widget-content jqx-widget-content-energyblue" style="width: 100%; height: 100%;">
+            <div id="blocklyArea"  class="splitter-panel jqx-widget-content jqx-widget-content-energyblue jqx-splitter-panel jqx-splitter-panel-energyblue jqx-reset jqx-reset-energyblue" style="background-color: rgb(245, 55, 242); left: 0px; top: 0px; height: 100%; width: 70%; visibility: inherit;">
 
-<div style="width: 100%; height: 100%">
-<!--<div>Hello</div>-->
-
-<div id="jqxWidget" style="width: 100%; height: 100%">
-  <div id="container" style="float: left; width: 100%; height: 100%;">
-    <div id="mainSplitter" class="jqx-reset jqx-reset-energyblue jqx-splitter jqx-splitter-energyblue jqx-widget jqx-widget-energyblue jqx-widget-content jqx-widget-content-energyblue" style="width: 100%; height: 100%;">
-      <div id="blocklyArea"  class="splitter-panel jqx-widget-content jqx-widget-content-energyblue jqx-splitter-panel jqx-splitter-panel-energyblue jqx-reset jqx-reset-energyblue" style="background-color: rgb(245, 55, 242); left: 0px; top: 0px; height: 100%; width: 50%; visibility: inherit;">
-
+            </div>
+            <div id="output_panel" class="splitter-panel jqx-widget-content jqx-widget-content-energyblue jqx-splitter-panel jqx-splitter-panel-energyblue jqx-reset jqx-reset-energyblue" style="background-color: rgb(245, 255, 242); left: 207px; top: 0px; height: 100%; width: 30%; visibility: inherit;">
+              <pre id="resultArea" style="margin: 5px; font-size: 8pt;">Panel 2</pre>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="splitter-panel jqx-widget-content jqx-widget-content-energyblue jqx-splitter-panel jqx-splitter-panel-energyblue jqx-reset jqx-reset-energyblue" style="background-color: rgb(245, 255, 242); left: 207px; top: 0px; height: 100%; width: 50%; visibility: inherit;">
-        <pre id="resultArea" style="margin: 5px;">Panel 2</pre>
-      </div>
-    </div>
-  </div>
-</div>
-</div>
+  </td>
+  </tr>
+</table>
 
   <script src="../build/main.js" ></script>
 </body>
