@@ -15,6 +15,7 @@ class CustomBlock {
     public function new(block: Block, application: BlocklyApp) {
         this.block = block;
         this.application = application;
+        block.customContextMenu = customContextMenu;
     }
 
     /** Get the Haxe CustomBlock associated with a Blockly block */
@@ -22,6 +23,11 @@ class CustomBlock {
         var haxeBlock: CustomBlock = untyped __js__("this.haxeBlock");
         return haxeBlock;
     }
+
+    /**
+     * Callback for customizing the context menu
+     */
+    public function customContextMenu(menuOptions: Array<ContextMenuOption>) {}
 
     /**
      * Called when the workspace is being validated

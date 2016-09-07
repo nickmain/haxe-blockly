@@ -1,5 +1,6 @@
 package app.blocks;
 
+import blockly.ContextMenuOption;
 import blockly.Connection;
 import blockly.Blockly;
 import haxe.Unserializer;
@@ -62,6 +63,17 @@ class KitchenSink extends CustomBlock {
         block.setCommentText("Everything but the kitchen sink.");
         block.data = "This is some metadata";
         block.setMutator(new Mutator(['app.blocks.KitchenSinkMutatorInput']));
+    }
+
+    // add an edit/uneditable toggle context menu option
+    override function customContextMenu(menuOptions: Array<ContextMenuOption>) {
+        menuOptions.push({
+            text: block.isEditable() ? "Make uneditable" : "Make editable",
+            enabled: true,
+            callback: function() {
+                block.setEditable(! block.isEditable());
+            }
+        });
     }
 
     // handler for the checkbox value input

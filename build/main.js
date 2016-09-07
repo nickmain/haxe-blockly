@@ -537,6 +537,7 @@ app_Main.prototype = {
 var blockly_CustomBlock = function(block,application) {
 	this.block = block;
 	this.application = application;
+	block.customContextMenu = $bind(this,this.customContextMenu);
 };
 $hxClasses["blockly.CustomBlock"] = blockly_CustomBlock;
 blockly_CustomBlock.__name__ = ["blockly","CustomBlock"];
@@ -548,7 +549,9 @@ blockly_CustomBlock.fromBlock = function(block) {
 	return block.haxeBlock;
 };
 blockly_CustomBlock.prototype = {
-	validate: function() {
+	customContextMenu: function(menuOptions) {
+	}
+	,validate: function() {
 	}
 	,domToMutation: function(xmlElement) {
 	}
@@ -659,7 +662,13 @@ app_blocks_KitchenSink.register = function(app1) {
 };
 app_blocks_KitchenSink.__super__ = blockly_CustomBlock;
 app_blocks_KitchenSink.prototype = $extend(blockly_CustomBlock.prototype,{
-	funkyCheckInput: function(checked) {
+	customContextMenu: function(menuOptions) {
+		var _gthis = this;
+		menuOptions.push({ text : this.block.isEditable()?"Make uneditable":"Make editable", enabled : true, callback : function() {
+			_gthis.block.setEditable(!_gthis.block.isEditable());
+		}});
+	}
+	,funkyCheckInput: function(checked) {
 		if(checked) {
 			var inputBlock = this.getInputBlock("input1");
 			if(inputBlock == null) {

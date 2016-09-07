@@ -1,6 +1,7 @@
 package blockly;
 
 import haxe.extern.EitherType;
+
 @:native("Blockly.Block")
 extern class Block {
 
@@ -49,6 +50,12 @@ extern class Block {
 
     /** Whether this block is in a mutator */
     public var isInMutator (default,null): Bool;
+
+    /** Whether to show a context menu */
+    public var contextMenu: Bool;
+
+    /** Settable callback for customizing the context menu */
+    public var customContextMenu: Array<ContextMenuOption> -> Void;
 
     /**
      * Set the block colour as "#rrggbb" string or 0-360 hue
