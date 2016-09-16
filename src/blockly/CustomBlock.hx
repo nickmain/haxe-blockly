@@ -18,12 +18,6 @@ class CustomBlock {
         block.customContextMenu = customContextMenu;
     }
 
-    /** Get the Haxe CustomBlock associated with a Blockly block */
-    public static function customFromBlock(block: Block): CustomBlock {
-        var haxeBlock: CustomBlock = untyped __js__("this.haxeBlock");
-        return haxeBlock;
-    }
-
     /**
      * Callback for customizing the context menu
      */
@@ -89,6 +83,14 @@ class CustomBlock {
     }
 
     /**
+     * Get the next statement block
+     */
+    public function getNextBlock(): Null<Block> {
+        if(block.nextConnection == null ) return null;
+        return block.nextConnection.targetBlock();
+    }
+
+    /**
      * Get the block receiving the output
      */
     public function getOutputBlock(): Null<Block> {
@@ -125,13 +127,6 @@ class CustomBlock {
         var otherBlock = getInputBlock(inputName);
         if(otherBlock != null) otherBlock.unplug(true, true);
         return otherBlock;
-    }
-
-    /**
-     * Get the CustomBlock associated with a Blockly block
-     */
-    public static function fromBlock(block: Block): Null<CustomBlock> {
-        return untyped __js__("block.haxeBlock");
     }
 
     /**

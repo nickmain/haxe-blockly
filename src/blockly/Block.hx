@@ -11,6 +11,11 @@ extern class Block {
     public static function getById(id: String): Null<Block>;
 
     /**
+     * The associated Haxe CustomBlock, if any
+     */
+    public var haxeBlock: Null<CustomBlock>;
+
+    /**
      * Arbitrary data that is round-tripped in serialization
      */
     public var data: String;
