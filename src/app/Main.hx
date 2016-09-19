@@ -1,7 +1,7 @@
 package app;
 
-import blockly.XMLSerializer;
-import blockly.model.WorkspaceS12;
+import js.Browser;
+import js.html.Document;
 import blockly.events.Event;
 import js.Browser;
 import js.html.Element;
@@ -25,7 +25,10 @@ class Main {
         application.registerBlock( DemoQuestions );
         KitchenSink.register(application);
 
-        application.inject("blocklyArea", new BlocklyConfig()
+        var blocklyArea = Browser.document.getElementById("blocklyArea");
+        var blocklyDiv  = Browser.document.getElementById("blocklyDiv");
+
+        application.inject('blocklyDiv', new BlocklyConfig()
             .setMediaPath("media/")
 //            .useToolboxId("toolbox")
             .setToolbox(DemoToolbox.toString())
@@ -34,26 +37,38 @@ class Main {
             .showTrashcan(true)
         );
 
+        var onresize = function(e) {
+            // Compute the absolute coordinates and dimensions of blocklyArea.
+            var element = blocklyArea;
+            var x = 0;
+            var y = 0;
+            do {
+                x += element.offsetLeft;
+                y += element.offsetTop;
+                element = element.offsetParent;
+            } while (element != null);
+            // Position blocklyDiv over blocklyArea.
+            blocklyDiv.style.left = x + 'px';
+            blocklyDiv.style.top = y + 'px';
+            blocklyDiv.style.width = blocklyArea.offsetWidth + 'px';
+            blocklyDiv.style.height = blocklyArea.offsetHeight + 'px';
+        };
+        Browser.window.addEventListener('resize', onresize, false);
+        onresize(null);
+        Blockly.svgResize(application.workspace);
+
         resultArea = Browser.document.getElementById("resultArea");
         application.loadWorkspaceFromLocalStorage("demo");
 
-        Blockly.getMainWorkspace().addChangeListener(workspaceChanged);
+        application.workspace.addChangeListener(workspaceChanged);
     }
 
     function workspaceChanged(event: BlocklyEvent) {
         var e: Event = event;
-        trace('workspaceChanged $e');
+        //trace('workspaceChanged $e');
         application.workspaceToLocalStorage("demo");
 
-        // Round-trip the Workspace back to XML to make sure it looks plausible
-        var xmlText = application.workspaceToPrettyXML();
-
-        var ws = WorkspaceS12.deserializeWorkspace(Xml.parse(xmlText).firstChild());
-        var wsText = WorkspaceS12.serializeWorkspace(ws).toString();
-
-        var pretty = XMLSerializer.domToPrettyText(XMLSerializer.textToDom(wsText));
-
-        resultArea.innerText = pretty;
+        resultArea.innerText = application.workspaceToPrettyXML();
     }
 
     static var mainApp: Main;

@@ -13,6 +13,7 @@ enum Toolbox {
 
 enum Blocks {
     Block(block: BlockModel);
+    Button(text: String);
     Gap(gap: Int);
 }
 
@@ -42,6 +43,11 @@ class ToolboxS12 {
     static function serializeBlocks(block: Blocks): Xml {
         return switch(block) {
             case Block(block): WorkspaceS12.serializeBlock(block);
+            case Button(text): {
+                var button = Xml.createElement("button");
+                button.set("text", text);
+                button;
+            }
             case Gap(gap): {
                 var sep = Xml.createElement("sep");
                 sep.set("gap", '$gap');

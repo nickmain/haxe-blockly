@@ -24,6 +24,7 @@ class DemoToolbox {
         ]),
         Separator,
         Category("Foo Bar", "140", [], [
+            Button("Configure ..."),
             Block(BlockMin("app.blocks.FooBarBlock", [
                 ValueInput("inp1", null, BlockType("app.blocks.DemoQuestions"))], null)),
             Block(BlockType("app.blocks.DemoQuestions")),

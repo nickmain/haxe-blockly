@@ -1,5 +1,7 @@
 package blockly;
 
+import haxe.extern.EitherType;
+
 @:native("Blockly")
 extern class Blockly {
 
@@ -9,9 +11,13 @@ extern class Blockly {
      * @param {Object=} opt_options Optional dictionary of options.
      * @return {!Blockly.Workspace} Newly created main workspace.
      */
-    @:overload(function(div: js.html.Element, config: BlocklyConfig ): Workspace {})
-    @:overload(function(div:String, config: BlocklyConfig ): Workspace {})
-    public static function inject(div: js.html.Element, config: BlocklyConfig ): Workspace;
+    public static function inject(div: EitherType<js.html.Element, String>, config: BlocklyConfig ): Workspace;
+
+    /**
+     * Size the SVG image to completely fill its container. Call this when the view
+     * actually changes sizes (e.g. on a window resize/device orientation change).
+     */
+    public static function svgResize(workspace: Workspace): Void;
 
     /**
      * Returns the main workspace.  Returns the last used main workspace (based on focus).

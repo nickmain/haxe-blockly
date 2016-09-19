@@ -137,16 +137,6 @@ Std.__name__ = ["Std"];
 Std.string = function(s) {
 	return js_Boot.__string_rec(s,"");
 };
-Std.parseInt = function(x) {
-	var v = parseInt(x,10);
-	if(v == 0 && (HxOverrides.cca(x,1) == 120 || HxOverrides.cca(x,1) == 88)) {
-		v = parseInt(x);
-	}
-	if(isNaN(v)) {
-		return null;
-	}
-	return v;
-};
 var StringBuf = function() {
 	this.b = "";
 };
@@ -312,9 +302,6 @@ var Xml = function(nodeType) {
 };
 $hxClasses["Xml"] = Xml;
 Xml.__name__ = ["Xml"];
-Xml.parse = function(str) {
-	return haxe_xml_Parser.parse(str);
-};
 Xml.createElement = function(name) {
 	var xml = new Xml(Xml.Element);
 	if(xml.nodeType != Xml.Element) {
@@ -330,41 +317,6 @@ Xml.createPCData = function(data) {
 	}
 	xml.nodeValue = data;
 	return xml;
-};
-Xml.createCData = function(data) {
-	var xml = new Xml(Xml.CData);
-	if(xml.nodeType == Xml.Document || xml.nodeType == Xml.Element) {
-		throw new js__$Boot_HaxeError("Bad node type, unexpected " + xml.nodeType);
-	}
-	xml.nodeValue = data;
-	return xml;
-};
-Xml.createComment = function(data) {
-	var xml = new Xml(Xml.Comment);
-	if(xml.nodeType == Xml.Document || xml.nodeType == Xml.Element) {
-		throw new js__$Boot_HaxeError("Bad node type, unexpected " + xml.nodeType);
-	}
-	xml.nodeValue = data;
-	return xml;
-};
-Xml.createDocType = function(data) {
-	var xml = new Xml(Xml.DocType);
-	if(xml.nodeType == Xml.Document || xml.nodeType == Xml.Element) {
-		throw new js__$Boot_HaxeError("Bad node type, unexpected " + xml.nodeType);
-	}
-	xml.nodeValue = data;
-	return xml;
-};
-Xml.createProcessingInstruction = function(data) {
-	var xml = new Xml(Xml.ProcessingInstruction);
-	if(xml.nodeType == Xml.Document || xml.nodeType == Xml.Element) {
-		throw new js__$Boot_HaxeError("Bad node type, unexpected " + xml.nodeType);
-	}
-	xml.nodeValue = data;
-	return xml;
-};
-Xml.createDocument = function() {
-	return new Xml(Xml.Document);
 };
 Xml.prototype = {
 	get: function(att) {
@@ -385,78 +337,11 @@ Xml.prototype = {
 			_this.h[att] = value;
 		}
 	}
-	,exists: function(att) {
-		if(this.nodeType != Xml.Element) {
-			throw new js__$Boot_HaxeError("Bad node type, expected Element but found " + this.nodeType);
-		}
-		var _this = this.attributeMap;
-		if(__map_reserved[att] != null) {
-			return _this.existsReserved(att);
-		} else {
-			return _this.h.hasOwnProperty(att);
-		}
-	}
 	,attributes: function() {
 		if(this.nodeType != Xml.Element) {
 			throw new js__$Boot_HaxeError("Bad node type, expected Element but found " + this.nodeType);
 		}
 		return this.attributeMap.keys();
-	}
-	,elements: function() {
-		if(this.nodeType != Xml.Document && this.nodeType != Xml.Element) {
-			throw new js__$Boot_HaxeError("Bad node type, expected Element or Document but found " + this.nodeType);
-		}
-		var _g = [];
-		var _g1 = 0;
-		var _g2 = this.children;
-		while(_g1 < _g2.length) {
-			var child = _g2[_g1];
-			++_g1;
-			if(child.nodeType == Xml.Element) {
-				_g.push(child);
-			}
-		}
-		return HxOverrides.iter(_g);
-	}
-	,elementsNamed: function(name) {
-		if(this.nodeType != Xml.Document && this.nodeType != Xml.Element) {
-			throw new js__$Boot_HaxeError("Bad node type, expected Element or Document but found " + this.nodeType);
-		}
-		var _g = [];
-		var _g1 = 0;
-		var _g2 = this.children;
-		while(_g1 < _g2.length) {
-			var child = _g2[_g1];
-			++_g1;
-			var tmp;
-			if(child.nodeType == Xml.Element) {
-				if(child.nodeType != Xml.Element) {
-					throw new js__$Boot_HaxeError("Bad node type, expected Element but found " + child.nodeType);
-				}
-				tmp = child.nodeName == name;
-			} else {
-				tmp = false;
-			}
-			if(tmp) {
-				_g.push(child);
-			}
-		}
-		return HxOverrides.iter(_g);
-	}
-	,firstElement: function() {
-		if(this.nodeType != Xml.Document && this.nodeType != Xml.Element) {
-			throw new js__$Boot_HaxeError("Bad node type, expected Element or Document but found " + this.nodeType);
-		}
-		var _g = 0;
-		var _g1 = this.children;
-		while(_g < _g1.length) {
-			var child = _g1[_g];
-			++_g;
-			if(child.nodeType == Xml.Element) {
-				return child;
-			}
-		}
-		return null;
 	}
 	,addChild: function(x) {
 		if(this.nodeType != Xml.Document && this.nodeType != Xml.Element) {
@@ -488,9 +373,10 @@ blockly_model_Categories.Category = function(name,colour,subcategories,blocks) {
 blockly_model_Categories.Separator = ["Separator",1];
 blockly_model_Categories.Separator.toString = $estr;
 blockly_model_Categories.Separator.__enum__ = blockly_model_Categories;
-var blockly_model_Blocks = $hxClasses["blockly.model.Blocks"] = { __ename__ : ["blockly","model","Blocks"], __constructs__ : ["Block","Gap"] };
+var blockly_model_Blocks = $hxClasses["blockly.model.Blocks"] = { __ename__ : ["blockly","model","Blocks"], __constructs__ : ["Block","Button","Gap"] };
 blockly_model_Blocks.Block = function(block) { var $x = ["Block",0,block]; $x.__enum__ = blockly_model_Blocks; $x.toString = $estr; return $x; };
-blockly_model_Blocks.Gap = function(gap) { var $x = ["Gap",1,gap]; $x.__enum__ = blockly_model_Blocks; $x.toString = $estr; return $x; };
+blockly_model_Blocks.Button = function(text) { var $x = ["Button",1,text]; $x.__enum__ = blockly_model_Blocks; $x.toString = $estr; return $x; };
+blockly_model_Blocks.Gap = function(gap) { var $x = ["Gap",2,gap]; $x.__enum__ = blockly_model_Blocks; $x.toString = $estr; return $x; };
 var blockly_model_BlockModel = $hxClasses["blockly.model.BlockModel"] = { __ename__ : ["blockly","model","BlockModel"], __constructs__ : ["Block","BlockType","BlockMin"] };
 blockly_model_BlockModel.Block = function(type,id,disabled,collapsed,editable,movable,inlined,deletable,mutation,comment,next,data,inputs,fields) { var $x = ["Block",0,type,id,disabled,collapsed,editable,movable,inlined,deletable,mutation,comment,next,data,inputs,fields]; $x.__enum__ = blockly_model_BlockModel; $x.toString = $estr; return $x; };
 blockly_model_BlockModel.BlockType = function(type) { var $x = ["BlockType",1,type]; $x.__enum__ = blockly_model_BlockModel; $x.toString = $estr; return $x; };
@@ -512,10 +398,32 @@ var app_Main = function() {
 	this.application.registerBlock(app_blocks_FooBarBlock);
 	this.application.registerBlock(app_blocks_DemoQuestions);
 	app_blocks_KitchenSink.register(this.application);
-	this.application.inject("blocklyArea",new blockly_BlocklyConfig().setMediaPath("media/").setToolbox(app_DemoToolbox.toString()).setGrid(new blockly_Grid()).setZoom(new blockly_Zoom()).showTrashcan(true));
+	var blocklyArea = window.document.getElementById("blocklyArea");
+	var blocklyDiv = window.document.getElementById("blocklyDiv");
+	this.application.inject("blocklyDiv",new blockly_BlocklyConfig().setMediaPath("media/").setToolbox(app_DemoToolbox.toString()).setGrid(new blockly_Grid()).setZoom(new blockly_Zoom()).showTrashcan(true));
+	var onresize = function(e) {
+		var element = blocklyArea;
+		var x = 0;
+		var y = 0;
+		while(true) {
+			x += element.offsetLeft;
+			y += element.offsetTop;
+			element = element.offsetParent;
+			if(!(element != null)) {
+				break;
+			}
+		}
+		blocklyDiv.style.left = x + "px";
+		blocklyDiv.style.top = y + "px";
+		blocklyDiv.style.width = blocklyArea.offsetWidth + "px";
+		blocklyDiv.style.height = blocklyArea.offsetHeight + "px";
+	};
+	window.addEventListener("resize",onresize,false);
+	onresize(null);
+	Blockly.svgResize(this.application.workspace);
 	this.resultArea = window.document.getElementById("resultArea");
 	this.application.loadWorkspaceFromLocalStorage("demo");
-	Blockly.getMainWorkspace().addChangeListener($bind(this,this.workspaceChanged));
+	this.application.workspace.addChangeListener($bind(this,this.workspaceChanged));
 };
 $hxClasses["app.Main"] = app_Main;
 app_Main.__name__ = ["app","Main"];
@@ -524,13 +432,9 @@ app_Main.main = function() {
 };
 app_Main.prototype = {
 	workspaceChanged: function(event) {
-		console.log("workspaceChanged " + Std.string(blockly_events__$Event_BlocklyEvent_$Impl_$.toEvent(event)));
+		blockly_events__$Event_BlocklyEvent_$Impl_$.toEvent(event);
 		this.application.workspaceToLocalStorage("demo");
-		var _this = Xml.parse(this.application.workspaceToPrettyXML());
-		if(_this.nodeType != Xml.Document && _this.nodeType != Xml.Element) {
-			throw new js__$Boot_HaxeError("Bad node type, expected Element or Document but found " + _this.nodeType);
-		}
-		this.resultArea.innerText = Blockly.Xml.domToPrettyText(Blockly.Xml.textToDom(haxe_xml_Printer.print(blockly_model_WorkspaceS12.serializeWorkspace(blockly_model_WorkspaceS12.deserializeWorkspace(_this.children[0])))));
+		this.resultArea.innerText = this.application.workspaceToPrettyXML();
 	}
 	,__class__: app_Main
 };
@@ -541,13 +445,6 @@ var blockly_CustomBlock = function(block,application) {
 };
 $hxClasses["blockly.CustomBlock"] = blockly_CustomBlock;
 blockly_CustomBlock.__name__ = ["blockly","CustomBlock"];
-blockly_CustomBlock.customFromBlock = function(block) {
-	var haxeBlock = this.haxeBlock;
-	return haxeBlock;
-};
-blockly_CustomBlock.fromBlock = function(block) {
-	return block.haxeBlock;
-};
 blockly_CustomBlock.prototype = {
 	customContextMenu: function(menuOptions) {
 	}
@@ -572,6 +469,12 @@ blockly_CustomBlock.prototype = {
 			return null;
 		}
 		return this.block.previousConnection.targetBlock();
+	}
+	,getNextBlock: function() {
+		if(this.block.nextConnection == null) {
+			return null;
+		}
+		return this.block.nextConnection.targetBlock();
 	}
 	,getOutputBlock: function() {
 		if(this.block.outputConnection == null) {
@@ -1298,6 +1201,11 @@ blockly_model_ToolboxS12.serializeBlocks = function(block) {
 	case 0:
 		return blockly_model_WorkspaceS12.serializeBlock(block[2]);
 	case 1:
+		var text = block[2];
+		var button = Xml.createElement("button");
+		button.set("text",text);
+		return button;
+	case 2:
 		var gap = block[2];
 		var sep = Xml.createElement("sep");
 		sep.set("gap","" + gap);
@@ -1336,131 +1244,6 @@ blockly_model_ToolboxS12.serializeCategories = function(category) {
 var blockly_model_WorkspaceS12 = function() { };
 $hxClasses["blockly.model.WorkspaceS12"] = blockly_model_WorkspaceS12;
 blockly_model_WorkspaceS12.__name__ = ["blockly","model","WorkspaceS12"];
-blockly_model_WorkspaceS12.deserializeWorkspace = function(xml) {
-	var blocks = [];
-	var tmp = xml.elements();
-	while(tmp.hasNext()) {
-		var elem = tmp.next();
-		var block = blockly_model_WorkspaceS12.deserializeBlock(elem);
-		var xattr = elem.get("x");
-		var x = xattr != null?Std.parseInt(xattr):0;
-		var yattr = elem.get("y");
-		blocks.push({ x : x, y : yattr != null?Std.parseInt(yattr):0, block : block});
-	}
-	return { blocks : blocks};
-};
-blockly_model_WorkspaceS12.deserializeBlock = function(xml) {
-	return blockly_model_BlockModel.Block(xml.get("type"),xml.get("id"),blockly_model_WorkspaceS12.boolAttr(xml,false,"disabled"),blockly_model_WorkspaceS12.boolAttr(xml,false,"collapsed"),blockly_model_WorkspaceS12.boolAttr(xml,true,"editable"),blockly_model_WorkspaceS12.boolAttr(xml,true,"movable"),blockly_model_WorkspaceS12.boolAttr(xml,false,"inline"),blockly_model_WorkspaceS12.boolAttr(xml,true,"deletable"),blockly_model_WorkspaceS12.elemNamed(xml,"mutation"),blockly_model_WorkspaceS12.getComment(xml),blockly_model_WorkspaceS12.getNext(xml),blockly_model_WorkspaceS12.textNamed(xml,"data"),blockly_model_WorkspaceS12.readInputs(xml),blockly_model_WorkspaceS12.readFields(xml));
-};
-blockly_model_WorkspaceS12.readInputs = function(xml) {
-	var inputs = [];
-	var tmp = xml.elementsNamed("value");
-	while(tmp.hasNext()) {
-		var input = tmp.next();
-		var shadowElem = blockly_model_WorkspaceS12.elemNamed(input,"shadow");
-		var shadow = shadowElem != null?blockly_model_WorkspaceS12.deserializeBlock(shadowElem):null;
-		var blockElem = blockly_model_WorkspaceS12.elemNamed(input,"block");
-		var block = blockElem != null?blockly_model_WorkspaceS12.deserializeBlock(blockElem):null;
-		inputs.push(blockly_model_InputModel.ValueInput(input.get("name"),block,shadow));
-	}
-	var tmp1 = xml.elementsNamed("statement");
-	while(tmp1.hasNext()) {
-		var input1 = tmp1.next();
-		var blockElem1 = input1.firstElement();
-		var block1 = blockElem1 != null?blockly_model_WorkspaceS12.deserializeBlock(blockElem1):null;
-		inputs.push(blockly_model_InputModel.Statement(input1.get("name"),block1));
-	}
-	return inputs;
-};
-blockly_model_WorkspaceS12.readFields = function(xml) {
-	var fields = [];
-	var tmp = xml.elementsNamed("field");
-	while(tmp.hasNext()) {
-		var f = tmp.next();
-		fields.push({ name : f.get("name"), value : blockly_model_WorkspaceS12.elemText(f)});
-	}
-	if(fields.length > 0) {
-		return fields;
-	} else {
-		return null;
-	}
-};
-blockly_model_WorkspaceS12.elemText = function(xml) {
-	if(xml.nodeType != Xml.Document && xml.nodeType != Xml.Element) {
-		throw new js__$Boot_HaxeError("Bad node type, expected Element or Document but found " + xml.nodeType);
-	}
-	var child = xml.children[0];
-	if(child != null) {
-		return haxe_xml_Printer.print(child);
-	}
-	return "";
-};
-blockly_model_WorkspaceS12.getNext = function(xml) {
-	var elem = blockly_model_WorkspaceS12.elemNamed(xml,"next");
-	if(elem == null) {
-		return null;
-	}
-	var block = elem.firstElement();
-	if(block == null) {
-		return null;
-	}
-	return blockly_model_WorkspaceS12.deserializeBlock(block);
-};
-blockly_model_WorkspaceS12.getComment = function(xml) {
-	var elem = blockly_model_WorkspaceS12.elemNamed(xml,"comment");
-	if(elem == null) {
-		return null;
-	}
-	return { text : blockly_model_WorkspaceS12.elemText(elem), pinned : blockly_model_WorkspaceS12.boolAttr(elem,false,"pinned"), w : blockly_model_WorkspaceS12.intAttr(elem,"w"), h : blockly_model_WorkspaceS12.intAttr(elem,"h")};
-};
-blockly_model_WorkspaceS12.boolAttr = function(xml,defVal,attr) {
-	var value = xml.get(attr);
-	if(value == null) {
-		return defVal;
-	}
-	if(value != "true") {
-		return value == "TRUE";
-	} else {
-		return true;
-	}
-};
-blockly_model_WorkspaceS12.intAttr = function(xml,attr) {
-	var value = xml.get(attr);
-	if(value == null) {
-		return null;
-	}
-	var i = Std.parseInt(value);
-	if(i == null) {
-		return 0;
-	}
-	return i;
-};
-blockly_model_WorkspaceS12.elemNamed = function(xml,name) {
-	var tmp = xml.elementsNamed(name);
-	while(tmp.hasNext()) return tmp.next();
-	return null;
-};
-blockly_model_WorkspaceS12.textNamed = function(xml,name) {
-	var e = blockly_model_WorkspaceS12.elemNamed(xml,name);
-	if(e == null) {
-		return null;
-	}
-	return blockly_model_WorkspaceS12.elemText(e);
-};
-blockly_model_WorkspaceS12.serializeWorkspace = function(workspace) {
-	var root = Xml.createElement("xml");
-	var _g = 0;
-	var _g1 = workspace.blocks;
-	while(_g < _g1.length) {
-		var b = _g1[_g];
-		++_g;
-		var block = blockly_model_WorkspaceS12.serializeBlock(b.block);
-		block.set("x","" + b.x);
-		block.set("y","" + b.y);
-		root.addChild(block);
-	}
-	return root;
-};
 blockly_model_WorkspaceS12.serializeBlock = function(block,isShadow) {
 	if(isShadow == null) {
 		isShadow = false;
@@ -2276,12 +2059,6 @@ haxe_ds_StringMap.prototype = {
 			return this.rh["$" + key];
 		}
 	}
-	,existsReserved: function(key) {
-		if(this.rh == null) {
-			return false;
-		}
-		return this.rh.hasOwnProperty("$" + key);
-	}
 	,keys: function() {
 		return HxOverrides.iter(this.arrayKeys());
 	}
@@ -2314,368 +2091,6 @@ $hxClasses["haxe.io.Bytes"] = haxe_io_Bytes;
 haxe_io_Bytes.__name__ = ["haxe","io","Bytes"];
 haxe_io_Bytes.prototype = {
 	__class__: haxe_io_Bytes
-};
-var haxe_xml_XmlParserException = function(message,xml,position) {
-	this.xml = xml;
-	this.message = message;
-	this.position = position;
-	this.lineNumber = 1;
-	this.positionAtLine = 0;
-	var _g1 = 0;
-	while(_g1 < position) {
-		var c = xml.charCodeAt(_g1++);
-		if(c == 10) {
-			this.lineNumber++;
-			this.positionAtLine = 0;
-		} else if(c != 13) {
-			this.positionAtLine++;
-		}
-	}
-};
-$hxClasses["haxe.xml.XmlParserException"] = haxe_xml_XmlParserException;
-haxe_xml_XmlParserException.__name__ = ["haxe","xml","XmlParserException"];
-haxe_xml_XmlParserException.prototype = {
-	toString: function() {
-		return Type.getClassName(js_Boot.getClass(this)) + ": " + this.message + " at line " + this.lineNumber + " char " + this.positionAtLine;
-	}
-	,__class__: haxe_xml_XmlParserException
-};
-var haxe_xml_Parser = function() { };
-$hxClasses["haxe.xml.Parser"] = haxe_xml_Parser;
-haxe_xml_Parser.__name__ = ["haxe","xml","Parser"];
-haxe_xml_Parser.parse = function(str,strict) {
-	if(strict == null) {
-		strict = false;
-	}
-	var doc = Xml.createDocument();
-	haxe_xml_Parser.doParse(str,strict,0,doc);
-	return doc;
-};
-haxe_xml_Parser.doParse = function(str,strict,p,parent) {
-	if(p == null) {
-		p = 0;
-	}
-	var xml = null;
-	var state = 1;
-	var next = 1;
-	var aname = null;
-	var start = 0;
-	var nsubs = 0;
-	var nbrackets = 0;
-	var c = str.charCodeAt(p);
-	var buf = new StringBuf();
-	var escapeNext = 1;
-	var attrValQuote = -1;
-	while(c == c) {
-		switch(state) {
-		case 0:
-			switch(c) {
-			case 9:case 10:case 13:case 32:
-				break;
-			default:
-				state = next;
-				continue;
-			}
-			break;
-		case 1:
-			if(c == 60) {
-				state = 0;
-				next = 2;
-			} else {
-				start = p;
-				state = 13;
-				continue;
-			}
-			break;
-		case 2:
-			switch(c) {
-			case 33:
-				if(str.charCodeAt(p + 1) == 91) {
-					p += 2;
-					if(HxOverrides.substr(str,p,6).toUpperCase() != "CDATA[") {
-						throw new js__$Boot_HaxeError(new haxe_xml_XmlParserException("Expected <![CDATA[",str,p));
-					}
-					p += 5;
-					state = 17;
-					start = p + 1;
-				} else if(str.charCodeAt(p + 1) == 68 || str.charCodeAt(p + 1) == 100) {
-					if(HxOverrides.substr(str,p + 2,6).toUpperCase() != "OCTYPE") {
-						throw new js__$Boot_HaxeError(new haxe_xml_XmlParserException("Expected <!DOCTYPE",str,p));
-					}
-					p += 8;
-					state = 16;
-					start = p + 1;
-				} else if(str.charCodeAt(p + 1) != 45 || str.charCodeAt(p + 2) != 45) {
-					throw new js__$Boot_HaxeError(new haxe_xml_XmlParserException("Expected <!--",str,p));
-				} else {
-					p += 2;
-					state = 15;
-					start = p + 1;
-				}
-				break;
-			case 47:
-				if(parent == null) {
-					throw new js__$Boot_HaxeError(new haxe_xml_XmlParserException("Expected node name",str,p));
-				}
-				start = p + 1;
-				state = 0;
-				next = 10;
-				break;
-			case 63:
-				state = 14;
-				start = p;
-				break;
-			default:
-				state = 3;
-				start = p;
-				continue;
-			}
-			break;
-		case 3:
-			if(!(c >= 97 && c <= 122 || c >= 65 && c <= 90 || c >= 48 && c <= 57 || c == 58 || c == 46 || c == 95 || c == 45)) {
-				if(p == start) {
-					throw new js__$Boot_HaxeError(new haxe_xml_XmlParserException("Expected node name",str,p));
-				}
-				xml = Xml.createElement(HxOverrides.substr(str,start,p - start));
-				parent.addChild(xml);
-				++nsubs;
-				state = 0;
-				next = 4;
-				continue;
-			}
-			break;
-		case 4:
-			switch(c) {
-			case 47:
-				state = 11;
-				break;
-			case 62:
-				state = 9;
-				break;
-			default:
-				state = 5;
-				start = p;
-				continue;
-			}
-			break;
-		case 5:
-			if(!(c >= 97 && c <= 122 || c >= 65 && c <= 90 || c >= 48 && c <= 57 || c == 58 || c == 46 || c == 95 || c == 45)) {
-				var tmp;
-				if(start == p) {
-					throw new js__$Boot_HaxeError(new haxe_xml_XmlParserException("Expected attribute name",str,p));
-				}
-				tmp = HxOverrides.substr(str,start,p - start);
-				aname = tmp;
-				if(xml.exists(tmp)) {
-					throw new js__$Boot_HaxeError(new haxe_xml_XmlParserException("Duplicate attribute [" + tmp + "]",str,p));
-				}
-				state = 0;
-				next = 6;
-				continue;
-			}
-			break;
-		case 6:
-			if(c == 61) {
-				state = 0;
-				next = 7;
-			} else {
-				throw new js__$Boot_HaxeError(new haxe_xml_XmlParserException("Expected =",str,p));
-			}
-			break;
-		case 7:
-			switch(c) {
-			case 34:case 39:
-				buf = new StringBuf();
-				state = 8;
-				start = p + 1;
-				attrValQuote = c;
-				break;
-			default:
-				throw new js__$Boot_HaxeError(new haxe_xml_XmlParserException("Expected \"",str,p));
-			}
-			break;
-		case 8:
-			switch(c) {
-			case 38:
-				var len = p - start;
-				buf.b += len == null?HxOverrides.substr(str,start,null):HxOverrides.substr(str,start,len);
-				state = 18;
-				escapeNext = 8;
-				start = p + 1;
-				break;
-			case 60:case 62:
-				if(strict) {
-					throw new js__$Boot_HaxeError(new haxe_xml_XmlParserException("Invalid unescaped " + String.fromCharCode(c) + " in attribute value",str,p));
-				} else if(c == attrValQuote) {
-					var len1 = p - start;
-					buf.b += len1 == null?HxOverrides.substr(str,start,null):HxOverrides.substr(str,start,len1);
-					var val = buf.b;
-					buf = new StringBuf();
-					xml.set(aname,val);
-					state = 0;
-					next = 4;
-				}
-				break;
-			default:
-				if(c == attrValQuote) {
-					var len2 = p - start;
-					buf.b += len2 == null?HxOverrides.substr(str,start,null):HxOverrides.substr(str,start,len2);
-					var val1 = buf.b;
-					buf = new StringBuf();
-					xml.set(aname,val1);
-					state = 0;
-					next = 4;
-				}
-			}
-			break;
-		case 9:
-			p = haxe_xml_Parser.doParse(str,strict,p,xml);
-			start = p;
-			state = 1;
-			break;
-		case 10:
-			if(!(c >= 97 && c <= 122 || c >= 65 && c <= 90 || c >= 48 && c <= 57 || c == 58 || c == 46 || c == 95 || c == 45)) {
-				if(start == p) {
-					throw new js__$Boot_HaxeError(new haxe_xml_XmlParserException("Expected node name",str,p));
-				}
-				var v = HxOverrides.substr(str,start,p - start);
-				if(parent.nodeType != Xml.Element) {
-					throw new js__$Boot_HaxeError("Bad node type, expected Element but found " + parent.nodeType);
-				}
-				if(v != parent.nodeName) {
-					if(parent.nodeType != Xml.Element) {
-						throw new js__$Boot_HaxeError("Bad node type, expected Element but found " + parent.nodeType);
-					}
-					throw new js__$Boot_HaxeError(new haxe_xml_XmlParserException("Expected </" + parent.nodeName + ">",str,p));
-				}
-				state = 0;
-				next = 12;
-				continue;
-			}
-			break;
-		case 11:
-			if(c == 62) {
-				state = 1;
-			} else {
-				throw new js__$Boot_HaxeError(new haxe_xml_XmlParserException("Expected >",str,p));
-			}
-			break;
-		case 12:
-			if(c == 62) {
-				if(nsubs == 0) {
-					parent.addChild(Xml.createPCData(""));
-				}
-				return p;
-			} else {
-				throw new js__$Boot_HaxeError(new haxe_xml_XmlParserException("Expected >",str,p));
-			}
-			break;
-		case 13:
-			if(c == 60) {
-				var len3 = p - start;
-				buf.b += len3 == null?HxOverrides.substr(str,start,null):HxOverrides.substr(str,start,len3);
-				var child = Xml.createPCData(buf.b);
-				buf = new StringBuf();
-				parent.addChild(child);
-				++nsubs;
-				state = 0;
-				next = 2;
-			} else if(c == 38) {
-				var len4 = p - start;
-				buf.b += len4 == null?HxOverrides.substr(str,start,null):HxOverrides.substr(str,start,len4);
-				state = 18;
-				escapeNext = 13;
-				start = p + 1;
-			}
-			break;
-		case 14:
-			if(c == 63 && str.charCodeAt(p + 1) == 62) {
-				++p;
-				parent.addChild(Xml.createProcessingInstruction(HxOverrides.substr(str,start + 1,p - start - 2)));
-				++nsubs;
-				state = 1;
-			}
-			break;
-		case 15:
-			if(c == 45 && str.charCodeAt(p + 1) == 45 && str.charCodeAt(p + 2) == 62) {
-				parent.addChild(Xml.createComment(HxOverrides.substr(str,start,p - start)));
-				++nsubs;
-				p += 2;
-				state = 1;
-			}
-			break;
-		case 16:
-			if(c == 91) {
-				++nbrackets;
-			} else if(c == 93) {
-				--nbrackets;
-			} else if(c == 62 && nbrackets == 0) {
-				parent.addChild(Xml.createDocType(HxOverrides.substr(str,start,p - start)));
-				++nsubs;
-				state = 1;
-			}
-			break;
-		case 17:
-			if(c == 93 && str.charCodeAt(p + 1) == 93 && str.charCodeAt(p + 2) == 62) {
-				parent.addChild(Xml.createCData(HxOverrides.substr(str,start,p - start)));
-				++nsubs;
-				p += 2;
-				state = 1;
-			}
-			break;
-		case 18:
-			if(c == 59) {
-				var s = HxOverrides.substr(str,start,p - start);
-				if(s.charCodeAt(0) == 35) {
-					buf.b += String.fromCharCode(s.charCodeAt(1) == 120?Std.parseInt("0" + HxOverrides.substr(s,1,s.length - 1)):Std.parseInt(HxOverrides.substr(s,1,s.length - 1)));
-				} else {
-					var _this = haxe_xml_Parser.escapes;
-					if(!(__map_reserved[s] != null?_this.existsReserved(s):_this.h.hasOwnProperty(s))) {
-						if(strict) {
-							throw new js__$Boot_HaxeError(new haxe_xml_XmlParserException("Undefined entity: " + s,str,p));
-						}
-						buf.b += Std.string("&" + s + ";");
-					} else {
-						var _this1 = haxe_xml_Parser.escapes;
-						buf.b += Std.string(__map_reserved[s] != null?_this1.getReserved(s):_this1.h[s]);
-					}
-				}
-				start = p + 1;
-				state = escapeNext;
-			} else if(!(c >= 97 && c <= 122 || c >= 65 && c <= 90 || c >= 48 && c <= 57 || c == 58 || c == 46 || c == 95 || c == 45) && c != 35) {
-				if(strict) {
-					throw new js__$Boot_HaxeError(new haxe_xml_XmlParserException("Invalid character in entity: " + String.fromCharCode(c),str,p));
-				}
-				buf.b += "&";
-				var len5 = p - start;
-				buf.b += len5 == null?HxOverrides.substr(str,start,null):HxOverrides.substr(str,start,len5);
-				start = p--;
-				state = escapeNext;
-			}
-			break;
-		}
-		c = str.charCodeAt(++p);
-	}
-	if(state == 1) {
-		start = p;
-		state = 13;
-	}
-	if(state == 13) {
-		if(p != start || nsubs == 0) {
-			var len6 = p - start;
-			buf.b += len6 == null?HxOverrides.substr(str,start,null):HxOverrides.substr(str,start,len6);
-			parent.addChild(Xml.createPCData(buf.b));
-		}
-		return p;
-	}
-	if(!strict && state == 18 && escapeNext == 13) {
-		buf.b += "&";
-		var len7 = p - start;
-		buf.b += len7 == null?HxOverrides.substr(str,start,null):HxOverrides.substr(str,start,len7);
-		parent.addChild(Xml.createPCData(buf.b));
-		return p;
-	}
-	throw new js__$Boot_HaxeError(new haxe_xml_XmlParserException("Unexpected end",str,p));
 };
 var haxe_xml_Printer = function(pretty) {
 	this.output = new StringBuf();
@@ -3152,12 +2567,8 @@ if(ArrayBuffer.prototype.slice == null) {
 var Uint8Array = $global.Uint8Array || js_html_compat_Uint8Array._new;
 Xml.Element = 0;
 Xml.PCData = 1;
-Xml.CData = 2;
-Xml.Comment = 3;
-Xml.DocType = 4;
-Xml.ProcessingInstruction = 5;
 Xml.Document = 6;
-app_DemoToolbox.toolbox = blockly_model_Toolbox.TreeToolbox([blockly_model_Categories.Category("Logic","210",[blockly_model_Categories.Category("Baz Bat","#ffff00",[],[blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("controls_if")),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("controls_repeat_ext")),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("math_number")),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("math_arithmetic"))])],[blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("controls_if")),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("logic_compare")),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("logic_operation")),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("logic_negate")),blockly_model_Blocks.Gap(45),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("logic_boolean")),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("logic_null")),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("logic_ternary"))]),blockly_model_Categories.Separator,blockly_model_Categories.Category("Foo Bar","140",[],[blockly_model_Blocks.Block(blockly_model_BlockModel.BlockMin("app.blocks.FooBarBlock",[blockly_model_InputModel.ValueInput("inp1",null,blockly_model_BlockModel.BlockType("app.blocks.DemoQuestions"))],null)),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("app.blocks.DemoQuestions")),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("app.blocks.KitchenSink")),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("text")),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockMin("text_print",[blockly_model_InputModel.ValueInput("TEXT",null,blockly_model_BlockModel.BlockMin("text",null,[{ name : "TEXT", value : "abcd"}]))],null))])]);
+app_DemoToolbox.toolbox = blockly_model_Toolbox.TreeToolbox([blockly_model_Categories.Category("Logic","210",[blockly_model_Categories.Category("Baz Bat","#ffff00",[],[blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("controls_if")),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("controls_repeat_ext")),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("math_number")),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("math_arithmetic"))])],[blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("controls_if")),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("logic_compare")),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("logic_operation")),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("logic_negate")),blockly_model_Blocks.Gap(45),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("logic_boolean")),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("logic_null")),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("logic_ternary"))]),blockly_model_Categories.Separator,blockly_model_Categories.Category("Foo Bar","140",[],[blockly_model_Blocks.Button("Configure ..."),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockMin("app.blocks.FooBarBlock",[blockly_model_InputModel.ValueInput("inp1",null,blockly_model_BlockModel.BlockType("app.blocks.DemoQuestions"))],null)),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("app.blocks.DemoQuestions")),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("app.blocks.KitchenSink")),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockType("text")),blockly_model_Blocks.Block(blockly_model_BlockModel.BlockMin("text_print",[blockly_model_InputModel.ValueInput("TEXT",null,blockly_model_BlockModel.BlockMin("text",null,[{ name : "TEXT", value : "abcd"}]))],null))])]);
 app_blocks_KitchenSink.DEFAULT_COLOR = "#009900";
 haxe_Serializer.USE_CACHE = false;
 haxe_Serializer.USE_ENUM_INDEX = false;
@@ -3165,37 +2576,6 @@ haxe_Serializer.BASE64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01
 haxe_Unserializer.DEFAULT_RESOLVER = new haxe__$Unserializer_DefaultResolver();
 haxe_Unserializer.BASE64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789%:";
 haxe_ds_ObjectMap.count = 0;
-haxe_xml_Parser.escapes = (function($this) {
-	var $r;
-	var h = new haxe_ds_StringMap();
-	if(__map_reserved.lt != null) {
-		h.setReserved("lt","<");
-	} else {
-		h.h["lt"] = "<";
-	}
-	if(__map_reserved.gt != null) {
-		h.setReserved("gt",">");
-	} else {
-		h.h["gt"] = ">";
-	}
-	if(__map_reserved.amp != null) {
-		h.setReserved("amp","&");
-	} else {
-		h.h["amp"] = "&";
-	}
-	if(__map_reserved.quot != null) {
-		h.setReserved("quot","\"");
-	} else {
-		h.h["quot"] = "\"";
-	}
-	if(__map_reserved.apos != null) {
-		h.setReserved("apos","'");
-	} else {
-		h.h["apos"] = "'";
-	}
-	$r = h;
-	return $r;
-}(this));
 js_Boot.__toStr = { }.toString;
 js_html_compat_Uint8Array.BYTES_PER_ELEMENT = 1;
 app_Main.main();
