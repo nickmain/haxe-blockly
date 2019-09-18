@@ -42,7 +42,7 @@ class ToolboxS12 {
 
     static function serializeBlocks(block: Blocks): Xml {
         return switch(block) {
-            case Block(block): WorkspaceS12.serializeBlock(block);
+            case Block(b): WorkspaceS12.serializeBlock(b);
             case Button(text): {
                 var button = Xml.createElement("button");
                 button.set("text", text);

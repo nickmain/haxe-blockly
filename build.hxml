@@ -1,3 +1,4 @@
+-lib hxnodejs
 -js build/main.js
 -cp src
 -D dce=full
@@ -5,10 +6,10 @@
 
 --next
 
--python ../haxe-blockly-flask-server/build/main.py
--cp ../haxe-flask/src
--cp ../haxe-blockly-flask-server/src
--D dce=full
--main blockly.backend.flask.Main
+-js build/demo.js
+-lib hxnodejs
+-D js-es=6
+-cp src
+-main demo.Main
 
 

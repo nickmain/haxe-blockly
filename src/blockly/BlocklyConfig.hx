@@ -20,8 +20,23 @@ class Zoom {
     public var scaleSpeed: Float = 1.2;
 }
 
-class BlocklyConfig implements Dynamic {
+class BlocklyConfig {
     public function new() {}
+
+    public var media: String;
+    public var collapse: Bool;
+    public var comments: Bool;
+    public var css: Bool;
+    public var disable: Bool;
+    public var grid: Grid;
+    public var maxBlocks: Int;
+    public var readOnly: Bool;
+    public var rtl: Bool;
+    public var scrollbars: Bool;
+    public var sounds: Bool;
+    public var trashcan: Bool;
+    public var zoom: Zoom;
+    public var toolbox: Any;
 
     // Path from page (or frame) to the Blockly media directory. Defaults to "https://blockly-demo.appspot.com/static/media/".
     public function setMediaPath(path: String) { this.media = path; return this; }
