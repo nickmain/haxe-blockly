@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html style="height: 100%; width: 100%; margin: 0px; padding: 0px">
+<head>
+  <meta charset="utf-8">
+  <title>Blockly Demo</title>
+
+  <script src="../blockly/13.1.1/blockly_compressed.js"></script>
+  <script src="../blockly/13.1.1/blocks_compressed.js"></script>
+  <script src="../blockly/13.1.1/msg/en.js"></script>
+  <link rel="stylesheet" type="text/css" href="style.css" >
+
+</head>
+<body style="height: 100%; width: 100%; margin: 0px; padding: 0px; overflow: hidden">
+
+<table style="height: 100%; width: 100%; margin: 0px; padding: 0px">
+  <tr style="height: 100%; margin: 0px; padding: 0px">
+    <td style="width: 70%; height: 100%; background: white; margin: 0px; padding: 0px; ">
+      <div id="blocklyArea" style="height: 100%"></div>
+    </td>
+    <td style="width: 30%; height: 100%; background: lemonchiffon">
+      <div class="tabmax">
+        <button id="trashButton" class="notext" title="...">
+          <img src='../blockly/13.1.1/media/1x1.gif' class="trash icon21">
+        </button>
+        <button id="linkButton" class="notext" title="...">
+          <img src='../blockly/13.1.1/media/1x1.gif' class="link icon21">
+        </button>
+        <button id="runButton" class="notext primary" title="...">
+          <img src='../blockly/13.1.1/media/1x1.gif' class="run icon21">
+        </button>
+      </div>
+      <div id="output_panel" >
+        <p id="resultArea" style="margin: 5px; font-size: 8pt; overflow: hidden">Panel 2</p>
+      </div>
+    </td>
+  </tr>
+</table>
+
+<div id="blocklyDiv" style="position: absolute"></div>
+
+<!--
+<table width="100%" height="100%">
+  <tr style="height: 25px;">
+    <td colspan=2>
+      <table width="100%">
+        <tr id="tabRow" height="1em">
+          <td class="taboff">Blockly Testbed</td>
+          <td class="tabmax">
+            <button id="trashButton" class="notext" title="...">
+              <img src='media/1x1.gif' class="trash icon21">
+            </button>
+            <button id="linkButton" class="notext" title="...">
+              <img src='media/1x1.gif' class="link icon21">
+            </button>
+            <button id="runButton" class="notext primary" title="...">
+              <img src='media/1x1.gif' class="run icon21">
+            </button>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td height="99%" width="70%" >
+      <div id="blocklyArea" class="content"></div>
+    </td>
+    <td style="width: 30%; height: 99%">
+      <div id="output_panel" >
+        <pre id="resultArea" style="margin: 5px; font-size: 8pt;">Panel 2</pre>
+      </div>
+    </td>
+  </tr>
+</table>
+-->
+
+  <script src="build/main.js" ></script>
+
+
+</body>
+</html>

@@ -25,7 +25,6 @@ class Main {
         application.registerBlock( DemoQuestions );
         KitchenSink.register(application);
 
-        var blocklyArea = Browser.document.getElementById("blocklyArea");
         var blocklyDiv  = Browser.document.getElementById("blocklyDiv");
 
         application.inject('blocklyDiv', new BlocklyConfig()

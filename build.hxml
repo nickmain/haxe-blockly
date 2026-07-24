@@ -1,15 +1,15 @@
--lib hxnodejs
--js build/main.js
+#-lib hxnodejs
+-js build/main2.js
 -cp src
 -D dce=full
--main app.Main
+-main app.Main2
 
---next
+# --next
 
--js build/demo.js
--lib hxnodejs
--D js-es=6
--cp src
--main demo.Main
+#-js build/demo.js
+#-lib hxnodejs
+#-D js-es=6
+#-cp src
+#-main demo.Main
 
 

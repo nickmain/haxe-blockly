@@ -1,40 +1,23 @@
 package blockly;
 
 import haxe.extern.EitherType;
+import js.html.Element;
 
 @:native("Blockly")
 extern class Blockly {
 
     /**
-     * Inject a Blockly editor into the specified container element (usually a div).
-     * @param {!Element|string} container Containing element or its ID.
-     * @param {Object=} opt_options Optional dictionary of options.
-     * @return {!Blockly.Workspace} Newly created main workspace.
-     */
-    public static function inject(div: EitherType<js.html.Element, String>, config: BlocklyConfig ): Workspace;
+    * Inject a Blockly editor into the specified container element (usually a div).
+    *
+    * @param container Containing element, or its ID, or a CSS selector.
+    * @param opt_options Optional dictionary of options.
+    * @returns Newly created main workspace.
+    */
+    static function inject(container: EitherType<Element, String>, ?opt_options: BlocklyOptions): WorkspaceSvg;
 
     /**
-     * Size the SVG image to completely fill its container. Call this when the view
-     * actually changes sizes (e.g. on a window resize/device orientation change).
-     */
-    public static function svgResize(workspace: Workspace): Void;
-
-    /**
-     * Returns the main workspace.  Returns the last used main workspace (based on focus).
-     */
-    public static function getMainWorkspace(): Workspace;
-
-    public static var Blocks: Dynamic;
-
-    /**
-     * Currently selected block.
-     */
-    public static var selected: Null<Block>;
-
-    /** Generate a unique id */
-    public static function genUid(): String;
-
-    public static var ALIGN_LEFT: Int;
-    public static var ALIGN_CENTRE: Int;
-    public static var ALIGN_RIGHT: Int;
+     * A mapping of block type names to block prototype objects.
+    */
+    @:native("Blocks")
+    static var blocks: Map<String, Any>;
 }

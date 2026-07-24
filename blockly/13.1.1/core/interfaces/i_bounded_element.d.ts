@@ -1,0 +1,34 @@
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+import type { Rect } from '../utils/rect.js';
+/**
+ * A bounded element interface.
+ */
+export interface IBoundedElement {
+    /**
+     * Returns the coordinates of a bounded element describing the dimensions of
+     * the element. Coordinate system: workspace coordinates.
+     *
+     * @returns Object with coordinates of the bounded element.
+     */
+    getBoundingRectangle(): Rect;
+    /**
+     * Move the element by a relative offset.
+     *
+     * @param dx Horizontal offset in workspace units.
+     * @param dy Vertical offset in workspace units.
+     * @param reason Why is this move happening?  'user', 'bump', 'snap'...
+     */
+    moveBy(dx: number, dy: number, reason?: string[]): void;
+}
+/**
+ * Returns whether or not the given object conforms to IBoundedElement.
+ *
+ * @param object The object to test for conformance.
+ * @returns True if the object conforms to IBoundedElement, otherwise false.
+ */
+export declare function isBoundedElement(object: any): object is IBoundedElement;
+//# sourceMappingURL=i_bounded_element.d.ts.map
