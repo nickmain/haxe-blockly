@@ -64,9 +64,9 @@ typedef BlockInfo = {
     @:native("inline") var ?_inline: Bool;
     var ?data: String;
     var ?extraState: Any;
-    var ?icons: Map<String, Any>;
-    var ?fields: Map<String, Any>;
-    var ?inputs: Map<String, Block.ConnectionState>;
+    var ?icons: haxe.DynamicAccess<Any>;
+    var ?fields: haxe.DynamicAccess<Any>;
+    var ?inputs: haxe.DynamicAccess<Block.ConnectionState>;
     var ?next: Block.ConnectionState;
 }
 enum abstract BlockInfoKind(String) {

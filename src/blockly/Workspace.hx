@@ -189,7 +189,7 @@ extern class Workspace {
      *     to be created).
      * @returns True if there is capacity for the given map, false otherwise.
      */
-    function isCapacityAvailable(typeCountsMap: Map<String, Int>): Bool;
+    function isCapacityAvailable(typeCountsMap: haxe.DynamicAccess<Int>): Bool;
 
     /**
      * Checks if the workspace has any limits on the maximum number of blocks,

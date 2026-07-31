@@ -4,7 +4,7 @@ package blockly.event;
  * Enum of values for the .type property for event classes (concrete subclasses
  * of Abstract).
  */
-enum abstract EventType(String) {
+enum abstract EventType(String) to String {
     /** Type of event that creates a block. */
     var BLOCK_CREATE = "create";
     /** Type of event that deletes a block. */

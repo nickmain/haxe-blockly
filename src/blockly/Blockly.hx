@@ -19,5 +19,5 @@ extern class Blockly {
      * A mapping of block type names to block prototype objects.
     */
     @:native("Blocks")
-    static var blocks: Map<String, Any>;
+    static var blocks: haxe.DynamicAccess<Any>;
 }

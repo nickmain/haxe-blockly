@@ -44,8 +44,8 @@ typedef FontStyle = {
 }
 
 interface ITheme {
-    var blockStyles: Null<Map<String, PartialBlockStyle>>;
-    var categoryStyles: Null<Map<String, CategoryStyle>>;
+    var blockStyles: Null<haxe.DynamicAccess<PartialBlockStyle>>;
+    var categoryStyles: Null<haxe.DynamicAccess<CategoryStyle>>;
     var componentStyles: Null<ComponentStyle>;
     var fontStyle: Null<FontStyle>;
     var startHats: Null<Bool>;
@@ -59,10 +59,10 @@ extern class Theme implements ITheme {
     var base: Null<EitherType<String, Theme>>;
     
     /** @internal */
-    var blockStyles: Map<String, BlockStyle>;
+    var blockStyles: haxe.DynamicAccess<BlockStyle>;
 
     /** @internal */
-    var categoryStyles: Map<String, CategoryStyle>;
+    var categoryStyles: haxe.DynamicAccess<CategoryStyle>;
 
     /** @internal */
     var componentStyles: ComponentStyle;
@@ -87,8 +87,8 @@ extern class Theme implements ITheme {
      * @param opt_componentStyles A map of Blockly component names to style value.
      */
     function new(name: String, 
-                 ?opt_blockStyles: Map<String, PartialBlockStyle>, 
-                 ?opt_categoryStyles: Map<String, CategoryStyle>, 
+                 ?opt_blockStyles: haxe.DynamicAccess<PartialBlockStyle>, 
+                 ?opt_categoryStyles: haxe.DynamicAccess<CategoryStyle>, 
                  ?opt_componentStyles: ComponentStyle);
 
     /**
