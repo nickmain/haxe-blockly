@@ -1,5 +1,6 @@
 package blockly;
 
+import blockly.Toolbox.Position;
 import blockly.Toolbox.ToolboxInfo;
 import haxe.extern.EitherType;
 import js.html.Element;
@@ -33,6 +34,11 @@ typedef ZoomOptions = {
     var ?wheel: Bool;
 }
 
+enum abstract ToolboxPosition(String) to String {
+    var Start = "start";
+    var End = "end";
+}
+
 typedef BlocklyOptions = {
     var ?collapse: Bool;
     var ?comments: Bool;
@@ -41,23 +47,23 @@ typedef BlocklyOptions = {
     var ?grid: GridOptions;
     var ?horizontalLayout: Bool;
     var ?maxBlocks: Int;
-    var ?maxInstances: Map<String, Int>;
+    var ?maxInstances: haxe.DynamicAccess<Int>;
     var ?media: String;
     var ?modalInputs: Bool;
     var ?move: MoveOptions;
     var ?oneBasedIndex: Bool;
     var ?readOnly: Bool;
     var ?renderer: String;
-    var ?rendererOverrides: Map<String, Any>;
+    var ?rendererOverrides: haxe.DynamicAccess<Any>;
     var ?rtl: Bool;
     var ?scrollbars: EitherType<ScrollbarOptions, Bool>;
     var ?sounds: Bool;
     var ?theme: EitherType<Theme, EitherType<String, ITheme>>;
     var ?toolbox: EitherType<String, EitherType<ToolboxInfo, Element>>;
-    var ?toolboxPosition: String;
+    var ?toolboxPosition: ToolboxPosition;
     var ?trashcan: Bool;
     var ?maxTrashcanContents: Int;
-    var ?plugins: Map<String, Any>;
+    var ?plugins: haxe.DynamicAccess<Any>;
     var ?zoom: ZoomOptions;
     var ?parentWorkspace: WorkspaceSvg;
 }

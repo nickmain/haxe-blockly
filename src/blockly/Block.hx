@@ -30,9 +30,9 @@ typedef State = {
     @:native("inline") var ?_inline: Bool;
     var ?data: String;
     var ?extraState: Any;
-    var ?icons: Map<String, Any>;
-    var ?fields: Map<String, Any>;
-    var ?inputs: Map<String, ConnectionState>;
+    var ?icons: haxe.DynamicAccess<Any>;
+    var ?fields: haxe.DynamicAccess<Any>;
+    var ?inputs: haxe.DynamicAccess<ConnectionState>;
     var ?next: ConnectionState;
 }
 
