@@ -1,6 +1,8 @@
 package app;
 
 // import blockly.Blockly;
+import blockly.field.FieldLabel;
+import blockly.field.FieldCheckbox;
 import blockly.event.Selected;
 import blockly.event.BlockDelete;
 import haxe.macro.Type.EnumType;
@@ -13,6 +15,7 @@ import blockly.Toolbox.ToolboxInfo;
 import blockly.Blockly;
 
 class Main2 {
+    static var showWarnings: Bool = true;
 
     public function new() {
  
@@ -68,6 +71,15 @@ class Main2 {
 
         workspace.registerButtonCallback("wazoo", function(button) {
             trace("Button clicked: " + button.getButtonText());
+            for (block in workspace.getTopBlocks()) {
+                trace('${showWarnings}');
+                if (showWarnings) {
+                    block.setWarningText("Button was clicked");
+                } else {
+                    block.setWarningText(null);
+                }                
+            }
+            showWarnings = !showWarnings;
         });
 
         workspace.addChangeListener(function(event) {
@@ -76,6 +88,8 @@ class Main2 {
                 trace('Created: ${createEvent.blockId}');
 
                 final block = workspace.getBlockById(createEvent.blockId);
+                if (block.type != "text_print") return;
+
                 // trace(block);
                 final textInput = block?.getInput("TEXT");
                 if (textInput?.getShadowDom() == null) {
@@ -83,6 +97,13 @@ class Main2 {
                         type: "text",
                         fields: { "TEXT": "Hello" }
                     });
+                    
+                    block.appendEndRowInput("NUNYA");
+                    block.appendDummyInput("ENABLED")
+                        .appendField(new FieldLabel("Enabled:"))
+                        .appendField(new FieldCheckbox(), "CHECK_FIELD");
+
+                    block.inputsInline = false;
                 }
             }
             else if (event.type == EventType.BLOCK_MOVE) {

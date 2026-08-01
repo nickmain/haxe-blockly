@@ -11,35 +11,54 @@ app_Main2.__name__ = true;
 app_Main2.main = function() {
 	var textPrintBlock = blockly_ToolboxItem.block("text_print");
 	textPrintBlock.inputs = { "TEXT" : { shadow : { type : "text", fields : { "TEXT" : "Hola!"}}}};
-	console.log("src/app/Main2.hx:32:",textPrintBlock);
+	console.log("src/app/Main2.hx:35:",textPrintBlock);
 	var toolbox = { kind : "categoryToolbox", contents : [blockly_ToolboxItem.staticCategory("Logic",[blockly_ToolboxItem.block("controls_if"),blockly_ToolboxItem.block("logic_compare"),blockly_ToolboxItem.block("logic_operation"),blockly_ToolboxItem.block("logic_boolean"),blockly_ToolboxItem.block("text_print"),textPrintBlock,blockly_ToolboxItem.block("text"),blockly_ToolboxItem.separator(50),blockly_ToolboxItem.label("Hello World"),blockly_ToolboxItem.button("Click Me","wazoo")],"#008811"),blockly_ToolboxItem.staticCategory("Custom",[blockly_ToolboxItem.block("controls_if")],"#881100")]};
 	var workspace = Blockly.inject("blocklyDiv",{ toolbox : toolbox, toolboxPosition : "end", zoom : { controls : true, wheel : true, startScale : 1.0, maxScale : 3, minScale : 0.3, scaleSpeed : 1.2, pinch : true}});
 	workspace.registerButtonCallback("wazoo",function(button) {
-		console.log("src/app/Main2.hx:70:","Button clicked: " + button.getButtonText());
+		console.log("src/app/Main2.hx:73:","Button clicked: " + button.getButtonText());
+		var _g = 0;
+		var _g1 = workspace.getTopBlocks();
+		while(_g < _g1.length) {
+			var block = _g1[_g];
+			++_g;
+			console.log("src/app/Main2.hx:75:","" + Std.string(app_Main2.showWarnings));
+			if(app_Main2.showWarnings) {
+				block.setWarningText("Button was clicked");
+			} else {
+				block.setWarningText(null);
+			}
+		}
+		app_Main2.showWarnings = !app_Main2.showWarnings;
 	});
 	workspace.addChangeListener(function(event) {
 		if(event.type == "create") {
 			var createEvent = event;
-			console.log("src/app/Main2.hx:76:","Created: " + createEvent.blockId);
+			console.log("src/app/Main2.hx:88:","Created: " + createEvent.blockId);
 			var block = workspace.getBlockById(createEvent.blockId);
+			if(block.type != "text_print") {
+				return;
+			}
 			var textInput = block != null ? block.getInput("TEXT") : null;
 			if((textInput != null ? textInput.getShadowDom() : null) == null) {
 				if(textInput != null) {
 					textInput.connection.setShadowState({ type : "text", fields : { "TEXT" : "Hello"}});
 				}
+				block.appendEndRowInput("NUNYA");
+				block.appendDummyInput("ENABLED").appendField(new Blockly.FieldLabel("Enabled:")).appendField(new Blockly.FieldCheckbox(),"CHECK_FIELD");
+				block.inputsInline = false;
 			}
 		} else if(event.type == "move") {
 			var moveEvent = event;
-			console.log("src/app/Main2.hx:90:","Moved " + moveEvent.blockId + " from " + moveEvent.oldParentId + ":" + moveEvent.oldInputName + " to " + moveEvent.newParentId + ":" + moveEvent.newInputName);
+			console.log("src/app/Main2.hx:111:","Moved " + moveEvent.blockId + " from " + moveEvent.oldParentId + ":" + moveEvent.oldInputName + " to " + moveEvent.newParentId + ":" + moveEvent.newInputName);
 		} else if(event.type == "change") {
 			var changeEvent = event;
-			console.log("src/app/Main2.hx:94:","Change: " + changeEvent.blockId + ":" + changeEvent.name + " " + changeEvent.element + " --> " + (changeEvent.newValue == null ? "null" : Std.string(changeEvent.newValue)));
+			console.log("src/app/Main2.hx:115:","Change: " + changeEvent.blockId + ":" + changeEvent.name + " " + changeEvent.element + " --> " + (changeEvent.newValue == null ? "null" : Std.string(changeEvent.newValue)));
 		} else if(event.type == "delete") {
 			var deleteEvent = event;
-			console.log("src/app/Main2.hx:98:","Delete: " + deleteEvent.blockId + " ids: " + Std.string(deleteEvent.ids));
+			console.log("src/app/Main2.hx:119:","Delete: " + deleteEvent.blockId + " ids: " + Std.string(deleteEvent.ids));
 		} else if(event.type == "selected") {
 			var selectEvent = event;
-			console.log("src/app/Main2.hx:102:","Selected: " + selectEvent.oldElementId + " --> " + selectEvent.newElementId);
+			console.log("src/app/Main2.hx:123:","Selected: " + selectEvent.oldElementId + " --> " + selectEvent.newElementId);
 		}
 	});
 };
@@ -142,5 +161,6 @@ js_Boot.__string_rec = function(o,s) {
 String.__name__ = true;
 Array.__name__ = true;
 js_Boot.__toStr = ({ }).toString;
+app_Main2.showWarnings = true;
 app_Main2.main();
 })({});
