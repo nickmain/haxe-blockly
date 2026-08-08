@@ -1,6 +1,7 @@
 package app;
 
 // import blockly.Blockly;
+import blockly.HaxeBlock;
 import blockly.field.FieldLabel;
 import blockly.field.FieldCheckbox;
 import blockly.event.Selected;
@@ -18,9 +19,9 @@ class Main2 {
     static var showWarnings: Bool = true;
 
     public function new() {
- 
+
     }
-    
+
     public static function main() {
         final textPrintBlock = ToolboxItem.block("text_print");
         textPrintBlock.inputs = {
@@ -35,7 +36,7 @@ class Main2 {
         trace(textPrintBlock);
 
         final toolbox: ToolboxInfo = {
-            kind: Category,            
+            kind: Category,
             contents: [
                 ToolboxItem.staticCategory("Logic", [
                     ToolboxItem.block("controls_if"),
@@ -50,14 +51,17 @@ class Main2 {
                     ToolboxItem.button("Click Me", "wazoo"),
                 ], "#008811"),
                 ToolboxItem.staticCategory("Custom", [
-                    ToolboxItem.block("controls_if"),
+                    ToolboxItem.block("app.blocks.TestBlock"),
                 ], "#881100")
             ]
         }
 
+        HaxeBlock.register(app.blocks.TestBlock);
+
         final workspace = Blockly.inject("blocklyDiv", {
             toolbox: toolbox,
             toolboxPosition: End,
+            renderer: "thrasos",
             zoom: {
                 controls: true,
                 wheel: true,
@@ -69,6 +73,19 @@ class Main2 {
             }
         });
 
+        final currentTheme = workspace.getTheme();
+
+        currentTheme.setBlockStyle('test_block_style', {
+            colourPrimary: "#ffff00",
+            colourSecondary: "#0000ff",
+            colourTertiary: "#ffffff",
+            hat: "#ff5722"
+        });
+
+        workspace.setTheme(currentTheme);
+
+        trace(currentTheme);
+
         workspace.registerButtonCallback("wazoo", function(button) {
             trace("Button clicked: " + button.getButtonText());
             for (block in workspace.getTopBlocks()) {
@@ -77,7 +94,7 @@ class Main2 {
                     block.setWarningText("Button was clicked");
                 } else {
                     block.setWarningText(null);
-                }                
+                }
             }
             showWarnings = !showWarnings;
         });
@@ -97,7 +114,7 @@ class Main2 {
                         type: "text",
                         fields: { "TEXT": "Hello" }
                     });
-                    
+
                     block.appendEndRowInput("NUNYA");
                     block.appendDummyInput("ENABLED")
                         .appendField(new FieldLabel("Enabled:"))

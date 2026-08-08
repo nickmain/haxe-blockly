@@ -40,7 +40,7 @@ extern class BlockSvg extends Block{
      */
     var saveConnections: Null<(rootBlock: BlockSvg) -> Void>;
 
-    // var customContextMenu: Null<(p1: Array<EitherType<ContextMenuOption, LegacyContextMenuOption>>) -> Void>;
+    var customContextMenu: Null<(p1: Array<ContextMenu.ContextMenuOption>) -> Void>;
 
     /**
      * Height of this block, not including any statement blocks above or below.
@@ -53,12 +53,12 @@ extern class BlockSvg extends Block{
      * Width is in workspace units.
      */
     var width: Float;
- 
+
     /** Block's mutator icon (if any). */
     // mutator: MutatorIcon | null;
- 
+
     var style: Theme.BlockStyle;
- 
+
     @:native("outputConnection")
     var outputRenderedConnection: Null<RenderedConnection>;
     @:native("nextConnection")
@@ -149,7 +149,7 @@ extern class BlockSvg extends Block{
      * @returns Object with coordinates of the bounding box.
      */
     function getBoundingRectangle(): Rect;
- 
+
     /**
      * Returns the coordinates of a bounding box describing the dimensions of this
      * block alone.
@@ -333,7 +333,7 @@ extern class BlockSvg extends Block{
      * @throws {Error} if the block style does not exist.
      */
     function setStyle(blockStyleName: String): Void;
-    
+
     /**
      * Returns the BlockStyle object used to style this block.
      *
@@ -456,7 +456,7 @@ extern class BlockSvg extends Block{
      * @returns Array of blocks.
      */
     function getChildren(ordered: Bool): Array<BlockSvg>;
- 
+
     /**
      * Immediately lays out and reflows a block based on its contents and
      * settings.
@@ -511,7 +511,7 @@ extern class BlockSvg extends Block{
      * @returns An accessibility description of this block.
      */
     // function getAriaLabel(verbosity: aria.Verbosity): String;
-    
+
     /**
      * Count the number of blocks in this stack (connected by next connections)
      * and return a label to describe it. Uses the standard label if there is only one block.

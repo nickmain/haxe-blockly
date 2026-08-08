@@ -47,6 +47,8 @@ typedef CommentModel = {
  * Not normally called directly, workspace.newBlock() is preferred.
  */
 extern class Block {
+    final haxeBlock: Null<HaxeBlock>;
+
     /**
      * An optional callback method to use whenever the block's parent workspace
      * changes. This is usually only called from the constructor, the block type
@@ -56,7 +58,7 @@ extern class Block {
 
     /** The language-neutral ID given to the collapsed input. */
     static final COLLAPSED_INPUT_NAME: String;
-    
+
     /** The language-neutral ID given to the collapsed field. */
     static final COLLAPSED_FIELD_NAME: String;
 
@@ -65,7 +67,7 @@ extern class Block {
      * Has no effect. May be used by 3rd parties for meta information.
      */
     var data: Null<String>;
-    
+
     /** An optional method called during initialization. */
     var init: Null<() -> Void>;
 
