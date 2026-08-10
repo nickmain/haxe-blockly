@@ -15,6 +15,12 @@ class HaxeBlock {
     }
 
     /**
+     * Callback from the workspace model manager when the block is created
+     * in the workspace.
+     */
+    public function onCreate() {}
+
+    /**
      * Callback for customizing the context menu
      */
     public function customContextMenu(menuOptions: Array<ContextMenu.ContextMenuOption>) {}
