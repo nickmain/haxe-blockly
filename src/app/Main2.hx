@@ -1,6 +1,9 @@
 package app;
 
 // import blockly.Blockly;
+import blockly.ContextMenuItems;
+import blockly.Coordinate;
+import blockly.WorkspaceComment;
 import blockly.HaxeBlock;
 import blockly.field.FieldLabel;
 import blockly.field.FieldCheckbox;
@@ -72,6 +75,13 @@ class Main2 {
                 pinch: true
             }
         });
+
+        ContextMenuItems.registerCommentOptions();
+
+        final comment = new WorkspaceComment(workspace, "adasdasd");
+        comment.setText("This is a comment");
+        comment.moveTo(new Coordinate(100, 100));
+        workspace.addTopComment(comment);
 
         final currentTheme = workspace.getTheme();
 

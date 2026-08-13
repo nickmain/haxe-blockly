@@ -1,6 +1,5 @@
 package blockly;
 
-import haxe.extern.EitherType;
 import blockly.event.AbstractEvent;
 import blockly.field.Field;
 import blockly.input.Input;
