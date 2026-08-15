@@ -1,15 +1,12 @@
-#-lib hxnodejs
 -js build/main2.js
--cp src
+--class-path src
+--class-path dependencies/json2object/src
 -D dce=full
 -main app.Main2
 
 # --next
 
 #-js build/demo.js
-#-lib hxnodejs
 #-D js-es=6
 #-cp src
 #-main demo.Main
-
-

@@ -17,27 +17,24 @@ app_Main2.__name__ = "app.Main2";
 app_Main2.main = function() {
 	var textPrintBlock = blockly_ToolboxItem.block("text_print");
 	textPrintBlock.inputs = { "TEXT" : { shadow : { type : "text", fields : { "TEXT" : "Hola!"}}}};
-	console.log("src/app/Main2.hx:39:",textPrintBlock);
+	console.log("src/app/Main2.hx:40:",textPrintBlock);
+	var model = new blockly_model_WorkspaceModel();
 	var toolbox = { kind : "categoryToolbox", contents : [blockly_ToolboxItem.staticCategory("Logic",[blockly_ToolboxItem.block("controls_if"),blockly_ToolboxItem.block("logic_compare"),blockly_ToolboxItem.block("logic_operation"),blockly_ToolboxItem.block("logic_boolean"),blockly_ToolboxItem.block("text_print"),textPrintBlock,blockly_ToolboxItem.block("text"),blockly_ToolboxItem.separator(50),blockly_ToolboxItem.label("Hello World"),blockly_ToolboxItem.button("Click Me","wazoo")],"#008811"),blockly_ToolboxItem.staticCategory("Custom",[blockly_ToolboxItem.block("app.blocks.TestBlock")],"#881100")]};
 	blockly_HaxeBlock.register(app_blocks_TestBlock);
 	var workspace = Blockly.inject("blocklyDiv",{ toolbox : toolbox, toolboxPosition : "end", renderer : "thrasos", zoom : { controls : true, wheel : true, startScale : 1.0, maxScale : 3, minScale : 0.3, scaleSpeed : 1.2, pinch : true}});
 	Blockly.ContextMenuItems.registerCommentOptions();
-	var comment = new blockly.WorkspaceComment(workspace,"adasdasd");
-	comment.setText("This is a comment");
-	comment.moveTo(new blockly.Coordinate(100,100));
-	workspace.addTopComment(comment);
 	var currentTheme = workspace.getTheme();
 	currentTheme.setBlockStyle("test_block_style",{ colourPrimary : "#ffff00", colourSecondary : "#0000ff", colourTertiary : "#ffffff", hat : "#ff5722"});
 	workspace.setTheme(currentTheme);
-	console.log("src/app/Main2.hx:97:",currentTheme);
+	console.log("src/app/Main2.hx:95:",currentTheme);
 	workspace.registerButtonCallback("wazoo",function(button) {
-		console.log("src/app/Main2.hx:100:","Button clicked: " + button.getButtonText());
+		console.log("src/app/Main2.hx:98:","Button clicked: " + button.getButtonText());
 		var _g = 0;
 		var _g1 = workspace.getTopBlocks();
 		while(_g < _g1.length) {
 			var block = _g1[_g];
 			++_g;
-			console.log("src/app/Main2.hx:102:","" + Std.string(app_Main2.showWarnings));
+			console.log("src/app/Main2.hx:100:","" + Std.string(app_Main2.showWarnings));
 			if(app_Main2.showWarnings) {
 				block.setWarningText("Button was clicked");
 			} else {
@@ -49,7 +46,7 @@ app_Main2.main = function() {
 	workspace.addChangeListener(function(event) {
 		if(event.type == "create") {
 			var createEvent = event;
-			console.log("src/app/Main2.hx:115:","Created: " + createEvent.blockId);
+			console.log("src/app/Main2.hx:113:","Created: " + createEvent.blockId);
 			var block = workspace.getBlockById(createEvent.blockId);
 			if(block.type != "text_print") {
 				return;
@@ -65,16 +62,16 @@ app_Main2.main = function() {
 			}
 		} else if(event.type == "move") {
 			var moveEvent = event;
-			console.log("src/app/Main2.hx:138:","Moved " + moveEvent.blockId + " from " + moveEvent.oldParentId + ":" + moveEvent.oldInputName + " to " + moveEvent.newParentId + ":" + moveEvent.newInputName);
+			console.log("src/app/Main2.hx:136:","Moved " + moveEvent.blockId + " from " + moveEvent.oldParentId + ":" + moveEvent.oldInputName + " to " + moveEvent.newParentId + ":" + moveEvent.newInputName);
 		} else if(event.type == "change") {
 			var changeEvent = event;
-			console.log("src/app/Main2.hx:142:","Change: " + changeEvent.blockId + ":" + changeEvent.name + " " + changeEvent.element + " --> " + (changeEvent.newValue == null ? "null" : Std.string(changeEvent.newValue)));
+			console.log("src/app/Main2.hx:140:","Change: " + changeEvent.blockId + ":" + changeEvent.name + " " + changeEvent.element + " --> " + (changeEvent.newValue == null ? "null" : Std.string(changeEvent.newValue)));
 		} else if(event.type == "delete") {
 			var deleteEvent = event;
-			console.log("src/app/Main2.hx:146:","Delete: " + deleteEvent.blockId + " ids: " + Std.string(deleteEvent.ids));
+			console.log("src/app/Main2.hx:144:","Delete: " + deleteEvent.blockId + " ids: " + Std.string(deleteEvent.ids));
 		} else if(event.type == "selected") {
 			var selectEvent = event;
-			console.log("src/app/Main2.hx:150:","Selected: " + selectEvent.oldElementId + " --> " + selectEvent.newElementId);
+			console.log("src/app/Main2.hx:148:","Selected: " + selectEvent.oldElementId + " --> " + selectEvent.newElementId);
 		}
 	});
 };
@@ -207,6 +204,9 @@ blockly_ToolboxItem.label = function(text) {
 blockly_ToolboxItem.button = function(text,callbackkey) {
 	return { kind : "button", text : text, callbackkey : callbackkey};
 };
+var blockly_model_WorkspaceModel = function() {
+};
+blockly_model_WorkspaceModel.__name__ = "blockly.model.WorkspaceModel";
 var haxe_iterators_ArrayIterator = function(array) {
 	this.current = 0;
 	this.array = array;

@@ -1,0 +1,6 @@
+-main tests.Main
+-lib hxjsonast
+-lib utest
+-cp src
+-cp patched_utest
+--macro include("json2object")

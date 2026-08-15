@@ -1,6 +1,7 @@
 package app;
 
 // import blockly.Blockly;
+import blockly.model.WorkspaceModel;
 import blockly.ContextMenuItems;
 import blockly.Coordinate;
 import blockly.WorkspaceComment;
@@ -37,6 +38,8 @@ class Main2 {
         };
 
         trace(textPrintBlock);
+
+        final model = new WorkspaceModel();
 
         final toolbox: ToolboxInfo = {
             kind: Category,
@@ -77,11 +80,6 @@ class Main2 {
         });
 
         ContextMenuItems.registerCommentOptions();
-
-        final comment = new WorkspaceComment(workspace, "adasdasd");
-        comment.setText("This is a comment");
-        comment.moveTo(new Coordinate(100, 100));
-        workspace.addTopComment(comment);
 
         final currentTheme = workspace.getTheme();
 
